@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết yêu cầu giấy tờ{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <a class="btn btn-link" href="{{ url_for('citizen.document_requests_list') }}">← Quay lại danh sách</a>
+  <div class="d-flex justify-content-between align-items-center">
+    <h3 class="mb-3"><i class="fas fa-file-alt me-2"></i>Yêu cầu #{{ dr.id }}</h3>
+    {% if dr.status == 'pending' %}
+    <div class="d-flex gap-2">
+      <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('citizen.document_request_edit', id=dr.id) }}">Sửa</a>
+      <form method="post" action="{{ url_for('citizen.document_request_delete', id=dr.id) }}" onsubmit="return confirm('Xoá yêu cầu này?')">
+        <button class="btn btn-sm btn-outline-danger">Xoá</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Thông tin yêu cầu</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-2"><strong>Loại giấy tờ:</strong> {{ dr.doc_type.name if dr.doc_type else dr.type_id }}</div>
+              <div class="mb-2"><strong>Trạng thái:</strong> <span class="badge bg-{{ dr.status | doc_status_badge }}">{{ dr.status | doc_status }}</span></div>
+              <div class="mb-2"><strong>Ngày gửi:</strong> {{ dr.submitted_at | vn_datetime('%d/%m/%Y %H:%M') }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-2"><strong>Họ tên:</strong> {{ dr.applicant_full_name }}</div>
+              <div class="mb-2"><strong>SĐT:</strong> {{ dr.applicant_phone or '-' }}</div>
+              <div class="mb-2"><strong>CMND/CCCD:</strong> {{ dr.applicant_id_number or '-' }}</div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <strong>Ghi chú:</strong>
+            <div class="border rounded p-2 bg-light">{{ dr.notes or '—' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Tệp đính kèm</h5>
+          {% if attachments %}
+          <ul class="list-group list-group-flush">
+            {% for p in attachments %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="text-truncate" style="max-width: 70%">{{ p }}</span>
+              <a class="btn btn-sm btn-outline-secondary" href="/uploads/{{ p }}" target="_blank">Xem</a>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <div class="text-muted">Không có tệp đính kèm</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Trạng thái xử lý</h5>
+          <div class="mb-2"><strong>Ghi chú từ cán bộ:</strong></div>
+          <div class="border rounded p-2 bg-light">{{ dr.admin_comment or '—' }}</div>
+          <div class="mt-2"><strong>Ngày hẹn trả dự kiến:</strong> {{ dr.expected_pickup_date | vn_datetime('%d/%m/%Y') if dr.expected_pickup_date else '—' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

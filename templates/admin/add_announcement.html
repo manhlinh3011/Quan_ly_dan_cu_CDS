@@ -1,0 +1,220 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Sửa thông báo' if edit_mode else 'Thêm thông báo' }} - Admin{% endblock %}
+
+{% block page_title %}{{ 'Sửa thông báo' if edit_mode else 'Tạo thông báo mới' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-bullhorn me-2"></i>{{ 'Sửa thông báo' if edit_mode else 'Thêm thông báo mới' }}</h2>
+                <a href="{{ url_for('admin.bulletin_management') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Quay lại
+                </a>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Thông tin thông báo</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    {{ form.title.label(class="form-label required") }}
+                                    {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                                    {% if form.title.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Tiêu đề ngắn gọn, súc tích</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.category.label(class="form-label required") }}
+                                    {{ form.category(class="form-select" + (" is-invalid" if form.category.errors else "")) }}
+                                    {% if form.category.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.category.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.content.label(class="form-label required") }}
+                            {{ form.content(class="form-control" + (" is-invalid" if form.content.errors else ""), rows="10") }}
+                            {% if form.content.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Nội dung chi tiết của thông báo</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.priority.label(class="form-label required") }}
+                                    {{ form.priority(class="form-select" + (" is-invalid" if form.priority.errors else "")) }}
+                                    {% if form.priority.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.priority.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.publish_date.label(class="form-label") }}
+                                    {{ form.publish_date(class="form-control" + (" is-invalid" if form.publish_date.errors else "")) }}
+                                    {% if form.publish_date.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.publish_date.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Để trống để xuất bản ngay</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.attachments.label(class="form-label") }}
+                                    {{ form.attachments(class="form-control" + (" is-invalid" if form.attachments.errors else "")) }}
+                                    {% if form.attachments.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.attachments.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">PDF, DOC, DOCX, JPG, PNG</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                {{ form.is_published(class="form-check-input") }}
+                                {{ form.is_published.label(class="form-check-label") }}
+                            </div>
+                            <div class="form-text">Nếu không chọn, thông báo sẽ được lưu dạng nháp</div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Lưu ý:</strong> Thông báo được xuất bản sẽ hiển thị trên bảng tin công cộng và có thể được truy cập qua QR code.
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.bulletin_management') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Hủy
+                            </a>
+                            <div>
+                                <button type="submit" class="btn btn-{{ 'warning' if edit_mode else 'info' }} me-2">
+                                    <i class="fas fa-save me-1"></i>
+                                    {{ 'Cập nhật' if edit_mode else ('Xuất bản' if form.is_published.data else 'Lưu nháp') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Preview Area -->
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-eye me-2"></i>Hướng dẫn viết thông báo hiệu quả
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Tiêu đề tốt:</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Ngắn gọn, dễ hiểu
+                                </li>
+                                <li class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Thể hiện nội dung chính
+                                </li>
+                                <li class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Có từ khóa quan trọng
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Nội dung hiệu quả:</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Thông tin đầy đủ, chính xác
+                                </li>
+                                <li class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Có thời gian, địa điểm cụ thể
+                                </li>
+                                <li class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Ngôn ngữ dễ hiểu cho dân
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.required::after {
+    content: " *";
+    color: red;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const publishCheckbox = document.getElementById('is_published');
+    const publishDateField = document.getElementById('publish_date');
+    
+    function togglePublishDate() {
+        if (publishCheckbox.checked) {
+            publishDateField.disabled = false;
+        } else {
+            publishDateField.disabled = true;
+            publishDateField.value = '';
+        }
+    }
+    
+    publishCheckbox.addEventListener('change', togglePublishDate);
+    togglePublishDate(); // Initial state
+});
+</script>
+{% endblock %}

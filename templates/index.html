@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Trang chủ - Hệ thống Quản lý Xã{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="jumbotron bg-gradient text-black text-center py-5 rounded">
+                <div class="container">
+                    <h1 class="display-4 fw-bold">
+                        <i class="fas fa-landmark me-3"></i> UBND Xã Xuân Giang <br>
+                         Hệ thống quản lý dân cư và tương tác cộng đồng tại UBND xã dựa trên nền tảng số và trí tuệ nhân tạo
+                    </h1>
+                    <p class="lead">Quản lý dân cư hiệu quả - Tương tác cộng đồng minh bạch - Thông tin kịp thời</p>
+                    {% if not current_user.is_authenticated %}
+                        <a class="btn btn-light btn-lg me-3" href="{{ url_for('auth.register') }}">
+                            <i class="fas fa-user-plus me-2"></i>Đăng ký tài khoản
+                        </a>
+                        <a class="btn btn-light btn-lg me-3" href="{{ url_for('auth.login') }}">
+                            <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Tính năng chính</h2>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Quản lý Dân cư</h5>
+                    <p class="card-text">
+                        Cơ sở dữ liệu hộ gia đình, nhân khẩu đầy đủ. 
+                        Quản lý tạm trú, tạm vắng. Thống kê theo thôn/xóm/độ tuổi.
+                    </p>
+                    {% if current_user.is_authenticated and current_user.role in ['admin', 'viewer'] %}
+                        <a href="{{ url_for('admin.population') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-right me-1"></i>Truy cập
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-comments fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">Phản ánh Người dân</h5>
+                    <p class="card-text">
+                        Tiếp nhận phản ánh từ người dân về hạ tầng, môi trường, an ninh. 
+                        Xử lý minh bạch, theo dõi trạng thái công khai.
+                    </p>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role in ['admin', 'viewer'] %}
+                            <a href="{{ url_for('admin.feedback_management') }}" class="btn btn-success">
+                                <i class="fas fa-arrow-right me-1"></i>Quản lý
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('citizen.submit_feedback') }}" class="btn btn-success">
+                                <i class="fas fa-arrow-right me-1"></i>Gửi phản ánh
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-bullhorn fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">Bảng tin Số</h5>
+                    <p class="card-text">
+                        Thông báo, tin tức, lịch họp, chính sách mới. 
+                        Truy cập nhanh qua QR code tại trụ sở UBND xã.
+                    </p>
+                    <a href="{{ url_for('bulletin.index') }}" class="btn btn-info">
+                        <i class="fas fa-arrow-right me-1"></i>Xem bảng tin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Access Section -->
+    {% if current_user.is_authenticated %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="text-center mb-4">Truy cập nhanh</h2>
+            </div>
+            
+            {% if current_user.role in ['admin', 'viewer'] %}
+                <div class="col-md-3 mb-3">
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary w-100 py-3">
+                        <i class="fas fa-tachometer-alt d-block mb-2" style="font-size: 2rem;"></i>
+                        Bảng điều khiển
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ url_for('admin.population') }}" class="btn btn-outline-primary w-100 py-3">
+                        <i class="fas fa-users d-block mb-2" style="font-size: 2rem;"></i>
+                        Quản lý dân cư
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ url_for('admin.feedback_management') }}" class="btn btn-outline-success w-100 py-3">
+                        <i class="fas fa-comments d-block mb-2" style="font-size: 2rem;"></i>
+                        Quản lý phản ánh
+                    </a>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <a href="{{ url_for('admin.bulletin_management') }}" class="btn btn-outline-info w-100 py-3">
+                        <i class="fas fa-bullhorn d-block mb-2" style="font-size: 2rem;"></i>
+                        Quản lý bảng tin
+                    </a>
+                </div>
+            {% else %}
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-outline-primary w-100 py-3">
+                        <i class="fas fa-tachometer-alt d-block mb-2" style="font-size: 2rem;"></i>
+                        Bảng cá nhân
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('citizen.submit_feedback') }}" class="btn btn-outline-success w-100 py-3">
+                        <i class="fas fa-comment-alt d-block mb-2" style="font-size: 2rem;"></i>
+                        Gửi phản ánh
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('citizen.feedback_history') }}" class="btn btn-outline-warning w-100 py-3">
+                        <i class="fas fa-history d-block mb-2" style="font-size: 2rem;"></i>
+                        Lịch sử phản ánh
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <!-- QR Code Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <i class="fas fa-qrcode me-2"></i>Truy cập nhanh bảng tin
+                    </h5>
+                    <p class="card-text">Quét mã QR để truy cập bảng tin từ điện thoại của bạn</p>
+                    <img src="{{ url_for('bulletin.generate_qr') }}" alt="QR Code" class="img-fluid" style="max-width: 200px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

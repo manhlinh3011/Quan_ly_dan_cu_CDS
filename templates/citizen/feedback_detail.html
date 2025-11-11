@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết phản ánh - Citizen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-comment-alt me-2"></i>Chi tiết phản ánh</h2>
+                <a href="{{ url_for('citizen.feedback_history') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Quay lại
+                </a>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ feedback.title }}</h5>
+                    <div>
+                        <span class="badge bg-{{ 'warning' if feedback.status == 'pending' else 'info' if feedback.status == 'in_progress' else 'success' if feedback.status == 'resolved' else 'danger' }} me-2">
+                            {{ feedback.status | replace('pending', 'Chờ xử lý') | replace('in_progress', 'Đang xử lý') | replace('resolved', 'Đã giải quyết') | replace('rejected', 'Từ chối') }}
+                        </span>
+                        <span class="badge bg-secondary">
+                            {{ feedback.category | replace('o_ga', 'Ổ gà đường xá') | replace('rac_thai', 'Rác thải môi trường') | replace('mat_dien', 'Mất điện') | replace('an_ninh', 'An ninh trật tự') | replace('khac', 'Khác') }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Feedback Info -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <strong>Ngày gửi:</strong> {{ feedback.created_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                        </div>
+                        <div class="col-md-6">
+                            {% if feedback.updated_at != feedback.created_at %}
+                                <strong>Cập nhật lần cuối:</strong> {{ feedback.updated_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if feedback.location %}
+                        <div class="mb-3">
+                            <strong>Địa điểm:</strong>
+                            <p class="mb-0">{{ feedback.location }}</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <strong>Mô tả chi tiết:</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            {{ feedback.description | replace('\n', '<br>') | safe }}
+                        </div>
+                    </div>
+                    
+                    <!-- Attachments -->
+                    {% if attachments %}
+                        {% if attachments %}
+                            <div class="mb-4">
+                                <strong>File đính kèm:</strong>
+                                <div class="mt-2">
+                                    {% for attachment in attachments %}
+                                        <div class="d-inline-block me-3 mb-2">
+                                            {% set file_ext = attachment.split('.')[-1].lower() %}
+                                            {% if file_ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                                                <a href="{{ url_for('uploaded_file', filename=attachment) }}" target="_blank" rel="noopener">
+                                                    <img src="{{ url_for('uploaded_file', filename=attachment) }}" 
+                                                         alt="Ảnh đính kèm" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ url_for('uploaded_file', filename=attachment) }}" 
+                                                   class="btn btn-outline-primary btn-sm" target="_blank">
+                                                    <i class="fas fa-file me-1"></i>{{ attachment }}
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <!-- Admin Response -->
+                    {% if feedback.admin_response %}
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-reply me-2"></i>Phản hồi từ UBND xã</h6>
+                            <p class="mb-0">{{ feedback.admin_response | replace('\n', '<br>') | safe }}</p>
+                            {% if feedback.resolved_at %}
+                                <hr>
+                                <small class="text-muted">
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    Giải quyết ngày: {{ feedback.resolved_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Status Timeline -->
+                    <div class="mb-4">
+                        <strong>Trạng thái xử lý:</strong>
+                        <div class="timeline mt-3">
+                            <div class="timeline-item active">
+                                <div class="timeline-marker bg-success">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Đã gửi phản ánh</h6>
+                                    <small class="text-muted">{{ feedback.created_at | vn_datetime('%d/%m/%Y %H:%M') }}</small>
+                                </div>
+                            </div>
+                            
+                            {% if feedback.status in ['in_progress', 'resolved', 'rejected'] %}
+                                <div class="timeline-item active">
+                                    <div class="timeline-marker bg-info">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h6>UBND xã đã tiếp nhận</h6>
+                                        <small class="text-muted">Phản ánh đã được xem xét</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            {% if feedback.status in ['resolved', 'rejected'] %}
+                                <div class="timeline-item active">
+                                    <div class="timeline-marker bg-{{ 'success' if feedback.status == 'resolved' else 'danger' }}">
+                                        <i class="fas fa-{{ 'check' if feedback.status == 'resolved' else 'times' }}"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h6>
+                                            {% if feedback.status == 'resolved' %}
+                                                Đã giải quyết
+                                            {% else %}
+                                                Từ chối xử lý
+                                            {% endif %}
+                                        </h6>
+                                        {% if feedback.resolved_at %}
+                                            <small class="text-muted">{{ feedback.resolved_at | vn_datetime('%d/%m/%Y %H:%M') }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('citizen.feedback_history') }}" class="btn btn-secondary">
+                            <i class="fas fa-list me-1"></i>Xem tất cả phản ánh
+                        </a>
+                        <a href="{{ url_for('citizen.submit_feedback') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-1"></i>Gửi phản ánh mới
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+}
+
+.timeline-item.active .timeline-marker {
+    z-index: 1;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.timeline-content small {
+    font-size: 12px;
+}
+</style>
+{% endblock %}

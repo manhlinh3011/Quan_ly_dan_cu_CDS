@@ -1,0 +1,314 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Quản lý Dân cư - Admin{% endblock %}
+
+{% block page_title %}Quản lý Dân cư{% endblock %}
+
+{% block content %}
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Tổng hộ gia đình</h6>
+                        <h3 class="mb-0">{{ total_households }}</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-home fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Tổng nhân khẩu</h6>
+                        <h3 class="mb-0">{{ total_residents }}</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Tạm trú/Tạm vắng</h6>
+                        <h3 class="mb-0">{{ temporary_residents or 0 }}</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Trẻ em dưới 18</h6>
+                        <h3 class="mb-0">{{ children_count or 0 }}</h3>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-child fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Bar -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4><i class="fas fa-users me-2"></i>Danh sách Hộ gia đình</h4>
+    <div class="btn-group">
+        {% if current_user.role == 'admin' %}
+        <a href="{{ url_for('admin.add_household') }}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i>Thêm hộ gia đình
+        </a>
+        {% endif %}
+        {% if current_user.role == 'admin' %}
+        <button type="button" id="exportDropdownButton" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Tải xuống">
+            <i class="fas fa-download me-1"></i>Xuất dữ liệu
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('admin.export_residents', format='csv', hamlet=hamlet) }}">
+                <i class="fas fa-file-csv me-2"></i>Xuất CSV
+            </a></li>
+            <li><a class="dropdown-item" href="{{ url_for('admin.export_residents', format='xml', hamlet=hamlet) }}">
+                <i class="fas fa-file-code me-2"></i>Xuất XML
+            </a></li>
+        </ul>
+        {% endif %}
+    </div>
+</div>
+    
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Tìm kiếm</label>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ search }}" placeholder="Mã hộ, tên chủ hộ, địa chỉ...">
+                </div>
+                <div class="col-md-3">
+                    <label for="hamlet" class="form-label">Thôn/Xóm</label>
+                    <select class="form-select" id="hamlet" name="hamlet">
+                        <option value="">Tất cả</option>
+                        {% for h in hamlets %}
+                            <option value="{{ h }}" {{ 'selected' if h == hamlet else '' }}>{{ h }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="age_group" class="form-label">Nhóm tuổi</label>
+                    <select class="form-select" id="age_group" name="age_group">
+                        <option value="">Tất cả</option>
+                        <option value="0-18" {{ 'selected' if age_group == '0-18' else '' }}>0-18 tuổi</option>
+                        <option value="18-60" {{ 'selected' if age_group == '18-60' else '' }}>18-60 tuổi</option>
+                        <option value="60+" {{ 'selected' if age_group == '60+' else '' }}>Trên 60 tuổi</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-1"></i>Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Households Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Danh sách hộ gia đình</h5>
+        </div>
+        <div class="card-body">
+            {% if households.items %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Mã hộ</th>
+                                <th>Chủ hộ</th>
+                                <th>Địa chỉ</th>
+                                <th>Thôn/Xóm</th>
+                                <th>Số nhân khẩu</th>
+                                <th>Điện thoại</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for household in households.items %}
+                                <tr>
+                                    <td><strong>{{ household.household_code }}</strong></td>
+                                    <td>{{ household.head_of_household }}</td>
+                                    <td>{{ household.address }}</td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ household.hamlet }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ household.residents | length }} người</span>
+                                    </td>
+                                    <td>{{ household.phone or '-' }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('admin.household_residents', id=household.id) }}" 
+                                               class="btn btn-info" title="Xem nhân khẩu">
+                                                <i class="fas fa-users"></i>
+                                            </a>
+                                            {% if current_user.role == 'admin' %}
+                                            <a href="{{ url_for('admin.edit_household', id=household.id) }}" 
+                                               class="btn btn-warning" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% if household.location_lat is not none and household.location_lng is not none %}
+                                            <button type="button" class="btn btn-primary" title="Xem vị trí map (Chủ hộ)"
+                                                    data-bs-toggle="modal" data-bs-target="#mapModal"
+                                                    data-map-title="Vị trí hộ gia đình: {{ household.household_code }}"
+                                                    data-lat="{{ '%.6f'|format(household.location_lat) }}"
+                                                    data-lng="{{ '%.6f'|format(household.location_lng) }}">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="btn btn-outline-secondary" title="Chưa có tọa độ" disabled>
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </button>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-danger" 
+                                                    onclick="confirmDeleteHousehold('{{ household.id }}')" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if households.pages > 1 %}
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if households.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.population', page=households.prev_num, search=search, hamlet=hamlet, age_group=age_group) }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page in households.iter_pages() %}
+                                {% if page %}
+                                    {% if page != households.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('admin.population', page=page, search=search, hamlet=hamlet, age_group=age_group) }}">{{ page }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if households.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.population', page=households.next_num, search=search, hamlet=hamlet, age_group=age_group) }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Không tìm thấy hộ gia đình nào</h5>
+                    <p class="text-muted">Thử thay đổi điều kiện tìm kiếm hoặc thêm hộ gia đình mới.</p>
+                    <a href="{{ url_for('admin.add_household') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i>Thêm hộ gia đình
+                    </a>
+                </div>
+                        {% endif %}
+        </div>
+    </div>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteHouseholdModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa hộ khẩu này không? Hành động này không thể hoàn tác.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteHousehold()">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    let householdToDelete = null;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteHouseholdModal'));
+
+    function confirmDeleteHousehold(householdId) {
+        householdToDelete = householdId;
+        deleteModal.show();
+    }
+
+    function deleteHousehold() {
+        if (!householdToDelete) return;
+
+        fetch(`/admin/household/${householdToDelete}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Có lỗi xảy ra khi xóa hộ khẩu. Vui lòng thử lại sau.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi xóa hộ khẩu. Vui lòng thử lại sau.');
+        })
+        .finally(() => {
+            deleteModal.hide();
+        });
+    }
+</script>
+{# Modal map dùng global trong base_admin.html; bỏ bản cục bộ và JS trùng #}
+{% endblock extra_js %}

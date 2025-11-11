@@ -1,0 +1,9 @@
+{
+  "MAIL_SERVER": "smtp.gmail.com",
+  "MAIL_PORT": 587,
+  "MAIL_USERNAME": "linhmanhhoang03@gmail.com",
+  "MAIL_PASSWORD": "hxrkvbcgnyvqutca",
+  "MAIL_USE_TLS": true,
+  "MAIL_SENDER": "linhmanhhoang03@gmail.com",
+  "ADMIN_NOTIFY_EMAILS": "linhmanhhoang03@gmail.com"
+}

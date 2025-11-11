@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Yêu cầu giấy tờ của tôi{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3><i class="fas fa-file-alt me-2"></i>Yêu cầu giấy tờ</h3>
+    <a href="{{ url_for('citizen.document_request_new') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Tạo yêu cầu</a>
+  </div>
+
+  <form class="row g-2 mb-3" method="get">
+    <div class="col-auto">
+      <select name="status" class="form-select" onchange="this.form.submit()">
+        <option value="">Tất cả trạng thái</option>
+        {% for s,v in [('pending','Chờ duyệt'),('in_review','Đang duyệt'),('approved','Đã duyệt'),('rejected','Từ chối'),('completed','Hoàn tất')] %}
+        <option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ v }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-striped mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Loại giấy tờ</th>
+            <th>Họ tên</th>
+            <th>Trạng thái</th>
+            <th>Ngày gửi</th>
+            <th class="text-end">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for dr in items.items %}
+          <tr>
+            <td>{{ dr.id }}</td>
+            <td>{{ dr.doc_type.name if dr.doc_type else dr.type_id }}</td>
+            <td>{{ dr.applicant_full_name }}</td>
+            <td><span class="badge bg-{{ dr.status | doc_status_badge }}">{{ dr.status | doc_status }}</span></td>
+            <td>{{ dr.submitted_at | vn_datetime('%d/%m/%Y %H:%M') }}</td>
+            <td class="text-end">
+              <a href="{{ url_for('citizen.document_request_detail', id=dr.id) }}" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+              {% if dr.status == 'pending' %}
+              <a href="{{ url_for('citizen.document_request_edit', id=dr.id) }}" class="btn btn-sm btn-outline-secondary">Sửa</a>
+              <form method="post" action="{{ url_for('citizen.document_request_delete', id=dr.id) }}" class="d-inline" onsubmit="return confirm('Xoá yêu cầu này?')">
+                <button class="btn btn-sm btn-outline-danger">Xoá</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center py-4 text-muted">Chưa có yêu cầu</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <nav class="mt-3">
+    <ul class="pagination">
+      {% if items.has_prev %}
+      <li class="page-item"><a class="page-link" href="?page={{ items.prev_num }}&status={{ status }}">«</a></li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">Trang {{ items.page }}/{{ items.pages }}</span></li>
+      {% if items.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ items.next_num }}&status={{ status }}">»</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endblock %}

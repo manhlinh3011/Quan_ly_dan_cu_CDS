@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Tạo yêu cầu giấy tờ{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <h3 class="mb-3"><i class="fas fa-file-circle-plus me-2"></i>Tạo yêu cầu giấy tờ</h3>
+  <div class="card">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.type_id.label(class='form-label required') }}
+          {{ form.type_id(class='form-select' + (' is-invalid' if form.type_id.errors else '')) }}
+          {% if form.type_id.errors %}
+            <div class="invalid-feedback">{{ form.type_id.errors[0] }}</div>
+          {% endif %}
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form.applicant_full_name.label(class='form-label required') }}
+            {{ form.applicant_full_name(class='form-control' + (' is-invalid' if form.applicant_full_name.errors else '')) }}
+            {% if form.applicant_full_name.errors %}
+              <div class="invalid-feedback">{{ form.applicant_full_name.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-3 mb-3">
+            {{ form.applicant_phone.label(class='form-label') }}
+            {{ form.applicant_phone(class='form-control' + (' is-invalid' if form.applicant_phone.errors else '')) }}
+            {% if form.applicant_phone.errors %}
+              <div class="invalid-feedback">{{ form.applicant_phone.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-3 mb-3">
+            {{ form.applicant_id_number.label(class='form-label') }}
+            {{ form.applicant_id_number(class='form-control' + (' is-invalid' if form.applicant_id_number.errors else '')) }}
+            {% if form.applicant_id_number.errors %}
+              <div class="invalid-feedback">{{ form.applicant_id_number.errors[0] }}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="mb-3">
+          {{ form.notes.label(class='form-label required') }}
+          {{ form.notes(class='form-control' + (' is-invalid' if form.notes.errors else ''), rows=3) }}
+          {% if form.notes.errors %}
+            <div class="invalid-feedback">{{ form.notes.errors[0] }}</div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          {{ form.attachments.label(class='form-label') }}
+          {{ form.attachments(class='form-control') }}
+          <div class="form-text">Chấp nhận: jpg, png, gif, pdf</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i>Gửi yêu cầu</button>
+          <a href="{{ url_for('citizen.document_requests_list') }}" class="btn btn-secondary">Hủy</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+2025-10-20 17:25:09,130 - INFO - Classifying feedback - Title: Ph\u1ea3n ánh tình tr\u1ea1ng ô nhi\u1ec5m nghiêm tr\u1ecdng
+2025-10-20 17:25:09,264 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["ph\u1ea3n \u00e1nh", "\u00f4 nhi\u1ec5m"], "method": "rules", "severity": "high", "severity_confidence": 0.670271431971668}
+2025-10-20 17:25:09,267 - INFO - Classifying feedback - Title: Khi\u1ebfu n\u1ea1i thái \u0111\u1ed9 ph\u1ee5c v\u1ee5
+2025-10-20 17:25:09,270 - INFO - Classification result: {"label": "khieu_nai", "confidence": 0.95, "important_terms": ["khi\u1ebfu n\u1ea1i (ti\u00eau \u0111\u1ec1)", "khi\u1ebfu"], "method": "rules", "severity": "high", "severity_confidence": 0.45911128929338324}
+2025-10-20 17:25:09,272 - INFO - Classifying feedback - Title: Ph\u1ea3n ánh v\u1ec1 an ninh tr\u1eadt t\u1ef1
+2025-10-20 17:25:09,278 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["ph\u1ea3n \u00e1nh"], "method": "rules", "severity": "high", "severity_confidence": 0.728241522769593}
+2025-10-20 17:34:56,982 - INFO - Classifying feedback - Title: Tai n\u1ea1n nghiêm tr\u1ecdng do \u1ed5 gà
+2025-10-20 17:34:57,145 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.6, "important_terms": [], "method": "rules", "severity": "high", "severity_confidence": 0.7999999999999999}
+2025-10-20 17:34:57,147 - INFO - Classifying feedback - Title: Tình tr\u1ea1ng ma túy trong khu dân c\u01b0
+2025-10-20 17:34:57,155 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.8889335793740162, "important_terms": ["khu d\u00e2n c\u01b0", "khu d\u00e2n", "d\u00e2n c\u01b0"], "method": "tfidf", "severity": "high", "severity_confidence": 0.7999999999999999}
+2025-10-20 17:34:57,156 - INFO - Classifying feedback - Title: Rác th\u1ea3i t\u1eadp k\u1ebft không \u0111úng n\u01a1i quy \u0111\u1ecbnh
+2025-10-20 17:34:57,159 - INFO - Classification result: {"label": "khieu_nai", "confidence": 0.7166666666666667, "important_terms": ["kh\u00f4ng \u0111\u00fang", "m\u1ea5t v\u1ec7 sinh"], "method": "rules", "severity": "medium", "severity_confidence": 0.75}
+2025-10-20 17:34:57,160 - INFO - Classifying feedback - Title: \u0110\u01b0\u1eddng xu\u1ed1ng c\u1ea5p c\u1ea7n s\u1eeda ch\u1eefa
+2025-10-20 17:34:57,162 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["xu\u1ed1ng c\u1ea5p"], "method": "rules", "severity": "medium", "severity_confidence": 0.75}
+2025-10-20 17:34:57,163 - INFO - Classifying feedback - Title: C\u1ea7n l\u1eafp thêm \u0111èn \u0111\u01b0\u1eddng
+2025-10-20 17:34:57,165 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["\u0111\u1ec1 xu\u1ea5t"], "method": "rules", "severity": "low", "severity_confidence": 0.7}
+2025-10-20 17:34:57,166 - INFO - Classifying feedback - Title: \u0110\u1ec1 ngh\u1ecb c\u1eaft t\u1ec9a cây xanh
+2025-10-20 17:34:57,175 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.768697441414135, "important_terms": ["c\u00e2y", "nh\u00e0", "c\u00e2y xanh"], "method": "tfidf", "severity": "low", "severity_confidence": 0.7}
+2025-10-22 13:09:28,329 - INFO - Classifying feedback - Title: Tai n\u1ea1n nghiêm tr\u1ecdng do \u1ed5 gà
+2025-10-22 13:09:29,335 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:09:29,335 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.6, "important_terms": [], "method": "rules", "severity": "high", "severity_confidence": 0.85}
+2025-10-22 13:09:29,338 - INFO - Classifying feedback - Title: Tai n\u1ea1n do \u1ed5 gà
+2025-10-22 13:09:29,346 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:09:29,346 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.8737281485373709, "important_terms": ["\u0111\u01b0\u1eddng", "ng\u01b0\u1eddi", "g\u00e2y"], "method": "tfidf", "severity": "low", "severity_confidence": 0.7}
+2025-10-22 13:09:29,348 - INFO - Classifying feedback - Title: Rác th\u1ea3i t\u1eadp k\u1ebft không \u0111úng n\u01a1i quy \u0111\u1ecbnh
+2025-10-22 13:09:29,355 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:09:29,355 - INFO - Classification result: {"label": "khieu_nai", "confidence": 0.7166666666666667, "important_terms": ["kh\u00f4ng \u0111\u00fang", "m\u1ea5t v\u1ec7 sinh"], "method": "rules", "severity": "medium", "severity_confidence": 0.75}
+2025-10-22 13:09:29,358 - INFO - Classifying feedback - Title: C\u1ea7n l\u1eafp thêm \u0111èn \u0111\u01b0\u1eddng
+2025-10-22 13:09:29,364 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:09:29,364 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["\u0111\u1ec1 xu\u1ea5t"], "method": "rules", "severity": "low", "severity_confidence": 0.7}
+2025-10-22 13:12:41,700 - INFO - Classifying feedback - Title: Tai n\u1ea1n nghiêm tr\u1ecdng do \u1ed5 gà gây ch\u1ebft ng\u01b0\u1eddi
+2025-10-22 13:12:42,793 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:12:42,794 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.6, "important_terms": [], "method": "rules", "severity": "high", "severity_confidence": 0.95}
+2025-10-22 13:12:42,795 - INFO - Classifying feedback - Title: Tai n\u1ea1n do \u1ed5 gà
+2025-10-22 13:12:42,805 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:12:42,805 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.8737281485373709, "important_terms": ["\u0111\u01b0\u1eddng", "ng\u01b0\u1eddi", "g\u00e2y"], "method": "tfidf", "severity": "low", "severity_confidence": 0.7}
+2025-10-22 13:12:42,807 - INFO - Classifying feedback - Title: Rác th\u1ea3i t\u1eadp k\u1ebft không \u0111úng n\u01a1i quy \u0111\u1ecbnh
+2025-10-22 13:12:42,814 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:12:42,814 - INFO - Classification result: {"label": "khieu_nai", "confidence": 0.7166666666666667, "important_terms": ["kh\u00f4ng \u0111\u00fang", "m\u1ea5t v\u1ec7 sinh"], "method": "rules", "severity": "medium", "severity_confidence": 0.75}
+2025-10-22 13:12:42,816 - INFO - Classifying feedback - Title: C\u1ea7n l\u1eafp thêm \u0111èn \u0111\u01b0\u1eddng
+2025-10-22 13:12:42,819 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 13:12:42,819 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["\u0111\u1ec1 xu\u1ea5t"], "method": "rules", "severity": "low", "severity_confidence": 0.7}
+2025-10-22 16:06:13,125 - INFO - Classifying feedback - Title: Tai n\u1ea1n nghiêm tr\u1ecdng do \u1ed5 gà
+2025-10-22 16:06:13,827 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 16:06:13,828 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.6, "important_terms": [], "method": "rules", "severity": "high", "severity_confidence": 0.88}
+2025-10-22 16:06:13,829 - INFO - Classifying feedback - Title: Tình tr\u1ea1ng ma túy trong khu dân c\u01b0
+2025-10-22 16:06:13,838 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 16:06:13,839 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.8889335793740162, "important_terms": ["khu d\u00e2n c\u01b0", "khu d\u00e2n", "d\u00e2n c\u01b0"], "method": "tfidf", "severity": "high", "severity_confidence": 0.88}
+2025-10-22 16:06:13,840 - INFO - Classifying feedback - Title: Rác th\u1ea3i t\u1eadp k\u1ebft không \u0111úng n\u01a1i quy \u0111\u1ecbnh
+2025-10-22 16:06:13,843 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 16:06:13,843 - INFO - Classification result: {"label": "khieu_nai", "confidence": 0.7166666666666667, "important_terms": ["kh\u00f4ng \u0111\u00fang", "m\u1ea5t v\u1ec7 sinh"], "method": "rules", "severity": "high", "severity_confidence": 0.85}
+2025-10-22 16:06:13,845 - INFO - Classifying feedback - Title: \u0110\u01b0\u1eddng xu\u1ed1ng c\u1ea5p c\u1ea7n s\u1eeda ch\u1eefa
+2025-10-22 16:06:13,847 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 16:06:13,848 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["xu\u1ed1ng c\u1ea5p"], "method": "rules", "severity": "medium", "severity_confidence": 0.85}
+2025-10-22 16:06:13,849 - INFO - Classifying feedback - Title: C\u1ea7n l\u1eafp thêm \u0111èn \u0111\u01b0\u1eddng
+2025-10-22 16:06:13,852 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 16:06:13,852 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.95, "important_terms": ["\u0111\u1ec1 xu\u1ea5t"], "method": "rules", "severity": "medium", "severity_confidence": 0.75}
+2025-10-22 16:06:13,854 - INFO - Classifying feedback - Title: \u0110\u1ec1 ngh\u1ecb c\u1eaft t\u1ec9a cây xanh
+2025-10-22 16:06:13,862 - WARNING - OpenAI API key ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5u hình trong config/api_config.json
+2025-10-22 16:06:13,862 - INFO - Classification result: {"label": "phan_anh", "confidence": 0.768697441414135, "important_terms": ["c\u00e2y", "nh\u00e0", "c\u00e2y xanh"], "method": "tfidf", "severity": "low", "severity_confidence": 0.65}

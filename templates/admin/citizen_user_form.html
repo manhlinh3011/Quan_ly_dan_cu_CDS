@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Cập nhật tài khoản Người dùng{% endblock %}
+{% block page_title %}Cập nhật tài khoản Người dùng{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">{{ form.username.label(class='form-label required') }}
+            {{ form.username(class='form-control' + (' is-invalid' if form.username.errors else '')) }}
+            {% if form.username.errors %}<div class="invalid-feedback">{{ form.username.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="mb-3">{{ form.email.label(class='form-label required') }}
+            {{ form.email(class='form-control' + (' is-invalid' if form.email.errors else '')) }}
+            {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="mb-3">{{ form.full_name.label(class='form-label required') }}
+            {{ form.full_name(class='form-control' + (' is-invalid' if form.full_name.errors else '')) }}
+            {% if form.full_name.errors %}<div class="invalid-feedback">{{ form.full_name.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="mb-3">{{ form.phone.label(class='form-label') }}
+            {{ form.phone(class='form-control' + (' is-invalid' if form.phone.errors else '')) }}
+            {% if form.phone.errors %}<div class="invalid-feedback">{{ form.phone.errors[0] }}</div>{% endif %}
+          </div>
+          <div class="mb-3">{{ form.password.label(class='form-label') }}
+            {{ form.password(class='form-control' + (' is-invalid' if form.password.errors else '')) }}
+            {% if form.password.errors %}<div class="invalid-feedback">{{ form.password.errors[0] }}</div>{% endif %}
+            <div class="form-text">Để trống nếu không đổi mật khẩu.</div>
+          </div>
+          <button class="btn btn-success" type="submit"><i class="fas fa-save me-1"></i>Lưu</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

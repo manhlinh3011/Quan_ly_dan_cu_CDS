@@ -1,0 +1,77 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Quản lý yêu cầu giấy tờ{% endblock %}
+{% block page_title %}Quản lý yêu cầu giấy tờ{% endblock %}
+
+{% block content %}
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <select name="type_id" class="form-select" onchange="this.form.submit()">
+      <option value="">Tất cả loại</option>
+      {% for t in types %}
+      <option value="{{ t.id }}" {% if type_id==t.id %}selected{% endif %}>{{ t.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select" onchange="this.form.submit()">
+      <option value="">Tất cả trạng thái</option>
+      {% for s,v in [('pending','Chờ duyệt'),('in_review','Đang duyệt'),('approved','Đã duyệt'),('rejected','Từ chối'),('completed','Hoàn tất')] %}
+      <option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ v }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-striped mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Loại</th>
+          <th>Người nộp</th>
+          <th>Trạng thái</th>
+          <th>Gửi lúc</th>
+          <th class="text-end">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dr, user, dt in items %}
+        <tr>
+          <td>{{ dr.id }}</td>
+          <td>{{ dt.name }}</td>
+          <td>{{ user.full_name }}</td>
+          <td><span class="badge bg-{{ dr.status | doc_status_badge }}">{{ dr.status | doc_status }}</span></td>
+          <td>{{ dr.submitted_at | vn_datetime('%d/%m/%Y %H:%M') }}</td>
+          <td class="text-end">
+            <a href="{{ url_for('admin.document_request_admin_detail', id=dr.id) }}" class="btn btn-sm btn-outline-primary">Xử lý</a>
+            {% if current_user.role == 'admin' %}
+            <form method="post" action="{{ url_for('admin.delete_document_request', id=dr.id) }}" class="d-inline" onsubmit="return confirm('Xoá yêu cầu này?')">
+              <button class="btn btn-sm btn-outline-danger">Xoá</button>
+            </form>
+            {% else %}
+            <span class="badge bg-secondary">Chỉ xem</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">Chưa có yêu cầu</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<nav class="mt-3">
+  <ul class="pagination">
+    {% if page>1 %}
+    <li class="page-item"><a class="page-link" href="?page={{ page-1 }}&status={{ status }}&type_id={{ type_id }}">«</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Trang {{ page }}</span></li>
+    {% if total > page*per_page %}
+    <li class="page-item"><a class="page-link" href="?page={{ page+1 }}&status={{ status }}&type_id={{ type_id }}">»</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

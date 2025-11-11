@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}Gửi phản ánh - Citizen{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-comment-alt me-2"></i>Gửi phản ánh đến UBND xã
+                    </h4>
+                    <button type="button" id="guide-start" class="btn btn-danger btn-sm btn-pulse" title="Hướng dẫn nhanh">
+                        <i class="fas fa-bullhorn me-1"></i> Hướng dẫn
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Hướng dẫn:</strong> Vui lòng mô tả chi tiết vấn đề bạn gặp phải. 
+                        Bạn có thể đính kèm ảnh hoặc video để minh họa. UBND xã sẽ xem xét và phản hồi trong thời gian sớm nhất.
+                    </div>
+                    
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    {{ form.title.label(class="form-label required") }}
+                                    {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                                    {% if form.title.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Tóm tắt ngắn gọn vấn đề bạn muốn phản ánh</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.category.label(class="form-label required") }}
+                                    {{ form.category(class="form-select" + (" is-invalid" if form.category.errors else "")) }}
+                                    {% if form.category.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.category.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label required") }}
+                            {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows="6") }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Mô tả chi tiết vấn đề, nguyên nhân, thời gian xảy ra...</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.location.label(class="form-label") }}
+                            {{ form.location(class="form-control" + (" is-invalid" if form.location.errors else "")) }}
+                            {% if form.location.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.location.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Địa điểm cụ thể xảy ra vấn đề (số nhà, tên đường, thôn/xóm...)</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.attachments.label(class="form-label") }}
+                            {{ form.attachments(class="form-control" + (" is-invalid" if form.attachments.errors else ""), multiple=True) }}
+                            {% if form.attachments.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.attachments.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-paperclip me-1"></i>
+                                Chọn nhiều file ảnh (JPG, PNG, GIF) hoặc video (MP4, AVI, MOV). Tối đa 16MB mỗi file.
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>Quay lại
+                            </a>
+                            <button type="submit" id="btn-submit-feedback" class="btn btn-success">
+                                <i class="fas fa-paper-plane me-1"></i>Gửi phản ánh
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tips -->
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Mẹo để phản ánh hiệu quả
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Mô tả rõ ràng, cụ thể
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Ghi rõ địa điểm chính xác
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Đính kèm ảnh minh họa
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Cung cấp thông tin liên hệ
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Chọn đúng loại phản ánh
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Theo dõi tiến độ xử lý
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.required::after {
+    content: " *";
+    color: red;
+}
+
+/* Nút đỏ có hiệu ứng phồng to rồi nhỏ (pulse) để gây chú ý */
+.btn-pulse {
+    position: relative;
+    animation: pulseScale 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220,53,69,.5); }
+    50% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(220,53,69,0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220,53,69,0); }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function() {
+        // Bootstrap 5 Popover helpers
+        function createPopover(el, title, content, placement) {
+            return new bootstrap.Popover(el, {
+                title: title,
+                content: content,
+                placement: placement || 'auto',
+                trigger: 'manual',
+                html: true,
+                container: 'body'
+            });
+        }
+
+        function scrollIntoViewIfNeeded(element) {
+            if (!element) return;
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function startGuide() {
+            const steps = [
+                {
+                    el: document.getElementById('{{ form.title.id }}'),
+                    title: 'Bước 1: Tiêu đề',
+                    content: 'Viết ngắn gọn, rõ vấn đề. Ví dụ: <em>Ổ gà lớn trước cổng trường</em>.\
+<div class="mt-2 text-end"><button class="btn btn-sm btn-secondary me-2" data-guide="close">Hiểu rồi/Đóng</button><button class="btn btn-sm btn-primary" data-guide="next">Tiếp</button></div>'
+                },
+                {
+                    el: document.getElementById('{{ form.description.id }}'),
+                    title: 'Bước 2: Mô tả',
+                    content: 'Nêu chi tiết: thời điểm, mức độ ảnh hưởng, ai bị ảnh hưởng.\
+<div class="mt-2 text-end"><button class="btn btn-sm btn-secondary me-2" data-guide="close">Hiểu rồi/Đóng</button><button class="btn btn-sm btn-primary" data-guide="next">Tiếp</button></div>'
+                },
+                {
+                    el: document.getElementById('{{ form.category.id }}'),
+                    title: 'Bước 3: Loại phản ánh',
+                    content: 'Chọn nhóm phù hợp: Ổ gà, Rác thải, Mất điện, An ninh...\
+<div class="mt-2 text-end"><button class="btn btn-sm btn-secondary me-2" data-guide="close">Hiểu rồi/Đóng</button><button class="btn btn-sm btn-primary" data-guide="next">Tiếp</button></div>'
+                },
+                {
+                    el: document.getElementById('{{ form.location.id }}'),
+                    title: 'Bước 4: Địa điểm',
+                    content: 'Ghi rõ số nhà, tên đường, thôn/xóm. Càng cụ thể càng tốt.\
+<div class="mt-2 text-end"><button class="btn btn-sm btn-secondary me-2" data-guide="close">Hiểu rồi/Đóng</button><button class="btn btn-sm btn-primary" data-guide="next">Tiếp</button></div>'
+                },
+                {
+                    el: document.getElementById('{{ form.attachments.id }}'),
+                    title: 'Bước 5: Ảnh/Video',
+                    content: 'Đính kèm hình ảnh/video rõ nét để minh hoạ hiện trường.\
+<div class="mt-2 text-end"><button class="btn btn-sm btn-secondary me-2" data-guide="close">Hiểu rồi/Đóng</button><button class="btn btn-sm btn-primary" data-guide="next">Tiếp</button></div>'
+                },
+                {
+                    el: document.getElementById('btn-submit-feedback'),
+                    title: 'Bước 6: Gửi',
+                    content: 'Kiểm tra lại thông tin rồi bấm <strong>Gửi phản ánh</strong>.\
+<div class="mt-2 text-end"><button class="btn btn-sm btn-success" data-guide="close">Hiểu rồi/Đóng</button></div>'
+                }
+            ];
+
+            let current = -1;
+            let currentPopover = null;
+
+            function cleanup() {
+                if (currentPopover) {
+                    try { currentPopover.hide(); } catch (e) {}
+                }
+                document.querySelectorAll('[data-guide-handler]')
+                    .forEach(btn => btn.removeEventListener('click', handler));
+            }
+
+            function handler(e) {
+                const action = e.target.getAttribute('data-guide') || e.target.closest('[data-guide]')?.getAttribute('data-guide');
+                if (action === 'close') {
+                    localStorage.setItem('feedbackGuideSeen', '1');
+                    cleanup();
+                    return;
+                }
+                if (action === 'next') {
+                    showNext();
+                }
+            }
+
+            function showNext() {
+                cleanup();
+                current += 1;
+                if (current >= steps.length) {
+                    localStorage.setItem('feedbackGuideSeen', '1');
+                    return;
+                }
+                const step = steps[current];
+                if (!step.el) { showNext(); return; }
+                scrollIntoViewIfNeeded(step.el);
+                const pop = createPopover(step.el, step.title, step.content, 'auto');
+                currentPopover = pop;
+                pop.show();
+                // delegate clicks inside popover
+                setTimeout(() => {
+                    document.querySelectorAll('.popover [data-guide]')
+                        .forEach(btn => { btn.setAttribute('data-guide-handler', '1'); btn.addEventListener('click', handler); });
+                }, 50);
+
+                // Auto-next convenience per step
+                try {
+                    if (current === 0) { // title
+                        const el = step.el;
+                        const go = () => { if ((el.value || '').trim().length >= 5) showNext(); };
+                        el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+                        el.addEventListener('blur', go);
+                    } else if (current === 1) { // description
+                        const el = step.el;
+                        const go = () => { if ((el.value || '').trim().length >= 10) showNext(); };
+                        el.addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); go(); } });
+                        el.addEventListener('blur', go);
+                    } else if (current === 2) { // category select
+                        step.el.addEventListener('change', () => showNext(), { once: true });
+                    } else if (current === 3) { // location
+                        const el = step.el; el.addEventListener('blur', () => { if ((el.value||'').trim().length>0) showNext(); }, { once: true });
+                    } else if (current === 4) { // attachments
+                        step.el.addEventListener('change', () => showNext(), { once: true });
+                    }
+                } catch (e) {}
+            }
+
+            showNext();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('guide-start');
+            if (startBtn) {
+                startBtn.addEventListener('click', startGuide);
+            }
+            // (Đã gỡ AI gợi ý loại/ưu tiên theo yêu cầu)
+            // Lần đầu vào trang, tự gợi ý (có thể tắt bằng localStorage)
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceGuide = urlParams.get('guide') === '1';
+            if (forceGuide) {
+                startGuide();
+                return;
+            }
+            if (!localStorage.getItem('feedbackGuideSeen')) {
+                setTimeout(() => {
+                    // Nháy nút hướng dẫn để thu hút
+                    startBtn?.classList.add('animate__animated');
+                    // Tự động mở hướng dẫn sau 1.2s
+                    startGuide();
+                }, 1200);
+            }
+        });
+    })();
+</script>
+{% endblock %}

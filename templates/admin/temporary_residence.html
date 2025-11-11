@@ -1,0 +1,285 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Tạm trú/Tạm vắng - Admin{% endblock %}
+
+{% block page_title %}Quản lý tạm trú/tạm vắng - {{ resident.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  #addressSearchWrapperTR { position: relative; }
+  #addressSuggestionsTR {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    z-index: 2000;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+  #addressSuggestionsTR .suggest-item { padding: 8px 10px; cursor: pointer; font-size: 0.95rem; }
+  #addressSuggestionsTR .suggest-item:hover { background: #f7f7f7; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-map-marker-alt me-2"></i>{{ resident.full_name }}</h2>
+                <a href="{{ url_for('admin.household_residents', id=resident.household_id) }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Quay lại
+                </a>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Thêm bản ghi tạm trú/tạm vắng</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.type.label(class="form-label required") }}
+                                    {{ form.type(class="form-select" + (" is-invalid" if form.type.errors else "")) }}
+                                    {% if form.type.errors %}
+                                        <div class="invalid-feedback">{{ form.type.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.start_date.label(class="form-label required") }}
+                                    {{ form.start_date(class="form-control" + (" is-invalid" if form.start_date.errors else "")) }}
+                                    {% if form.start_date.errors %}
+                                        <div class="invalid-feedback">{{ form.start_date.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.end_date.label(class="form-label required") }}
+                                    {{ form.end_date(class="form-control" + (" is-invalid" if form.end_date.errors else "")) }}
+                                    {% if form.end_date.errors %}
+                                        <div class="invalid-feedback">{{ form.end_date.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            {{ form.is_for_head(class="form-check-input", id="is_for_head") }}
+                            <label class="form-check-label" for="is_for_head">Áp dụng cho Chủ hộ (không gắn với cá nhân cụ thể)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.destination.label(class="form-label required") }}
+                                    {{ form.destination(class="form-control" + (" is-invalid" if form.destination.errors else "")) }}
+                                    {% if form.destination.errors %}
+                                        <div class="invalid-feedback">{{ form.destination.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.reason.label(class="form-label required") }}
+                                    {{ form.reason(class="form-control" + (" is-invalid" if form.reason.errors else "")) }}
+                                    {% if form.reason.errors %}
+                                        <div class="invalid-feedback">{{ form.reason.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vị trí tạm trú/tạm vắng trên bản đồ</label>
+                            <div id="addressSearchWrapperTR" class="mb-2">
+                                <input id="addressSearchTR" class="form-control" type="text" placeholder="Tìm địa chỉ (ví dụ: xã, thôn, đường...)" autocomplete="off" />
+                                <div id="addressSuggestionsTR"></div>
+                                <div class="form-text">Gõ ít nhất 3 ký tự để tìm. Chọn gợi ý để đặt vị trí.</div>
+                            </div>
+                            <div id="temporaryMapCreate" style="height: 300px; border: 1px solid #ddd; border-radius: 8px;"></div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    {{ form.lat.label(class="form-label") }}
+                                    {{ form.lat(class="form-control") }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.lng.label(class="form-label") }}
+                                    {{ form.lng(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="form-text">Nhấp vào bản đồ để chọn vị trí tạm trú/tạm vắng.</div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.contact_info.label(class="form-label required") }}
+                            {{ form.contact_info(class="form-control" + (" is-invalid" if form.contact_info.errors else "")) }}
+                            {% if form.contact_info.errors %}
+                                <div class="invalid-feedback">{{ form.contact_info.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Lưu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Lịch sử tạm trú/tạm vắng</h5>
+                </div>
+                <div class="card-body">
+                    {% if records %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Loại</th>
+                                        <th>Ngày bắt đầu</th>
+                                        <th>Ngày kết thúc</th>
+                                        <th>Nơi đi/đến</th>
+                                        <th>Lý do</th>
+                                        <th>Liên hệ</th>
+                                        <th>Trạng thái</th>
+                                        <th>Cho</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for r in records %}
+                                        <tr>
+                                            <td>{{ 'Tạm trú' if r.type == 'tam_tru' else 'Tạm vắng' }}</td>
+                                            <td>{{ r.start_date.strftime('%d/%m/%Y') }}</td>
+                                            <td>{{ r.end_date.strftime('%d/%m/%Y') if r.end_date else '-' }}</td>
+                                            <td>{{ r.destination or '-' }}</td>
+                                            <td>{{ r.reason or '-' }}</td>
+                                            <td>{{ r.contact_info or '-' }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if r.is_active else 'secondary' }}">{{ 'Đang hiệu lực' if r.is_active else 'Đã kết thúc' }}</span>
+                                            </td>
+                                            <td>{{ 'Chủ hộ' if r.is_for_head else resident.full_name }}</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    {% if r.lat is not none and r.lng is not none %}
+                                                    <button type="button" class="btn btn-primary" title="Xem vị trí map"
+                                                            data-bs-toggle="modal" data-bs-target="#mapModal"
+                                                            data-map-title="Vị trí tạm trú/tạm vắng: {{ resident.full_name }}"
+                                                            data-lat="{{ '%.6f'|format(r.lat) }}"
+                                                            data-lng="{{ '%.6f'|format(r.lng) }}">
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                    </button>
+                                                    {% else %}
+                                                    <button type="button" class="btn btn-outline-secondary" title="Chưa có tọa độ" disabled>
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                    <a class="btn btn-warning" href="{{ url_for('admin.edit_temporary_residence', id=r.id) }}"><i class="fas fa-edit"></i></a>
+                                                    <form method="POST" action="{{ url_for('admin.delete_temporary_residence', id=r.id) }}" onsubmit="return confirm('Xóa bản ghi này?');">
+                                                        <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Chưa có bản ghi tạm trú/tạm vắng.</p>
+                    {% endif %}
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{# Loại bỏ modal cục bộ để dùng Global Map Modal trong base_admin.html #}
+
+{% block extra_js %}
+<script>
+    (function(){
+        var map = L.map('temporaryMapCreate').setView([21.0, 105.0], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        var marker;
+        function updateFields(latlng){
+            var latInput = document.querySelector('[name="lat"]');
+            var lngInput = document.querySelector('[name="lng"]');
+            if(latInput) latInput.value = latlng.lat.toFixed(6);
+            if(lngInput) lngInput.value = latlng.lng.toFixed(6);
+        }
+        map.on('click', function(e){
+            if(marker){ map.removeLayer(marker); }
+            marker = L.marker(e.latlng).addTo(map);
+            updateFields(e.latlng);
+        });
+
+        // Autocomplete tìm địa chỉ (Nominatim)
+        var searchInput = document.getElementById('addressSearchTR');
+        var suggestBox = document.getElementById('addressSuggestionsTR');
+        var debounceTimer;
+        function clearSuggestions(){
+            if(!suggestBox) return;
+            suggestBox.innerHTML = '';
+            suggestBox.style.display = 'none';
+        }
+        function renderSuggestions(results){
+            if(!suggestBox) return;
+            suggestBox.innerHTML = results.map(function(r){
+                var label = r.display_name || (r.address && r.address.road) || 'Kết quả';
+                return '<div class="suggest-item" data-lat="'+r.lat+'" data-lon="'+r.lon+'">'+label+'</div>';
+            }).join('');
+            suggestBox.style.display = 'block';
+            Array.from(suggestBox.querySelectorAll('.suggest-item')).forEach(function(el){
+                el.addEventListener('click', function(){
+                    var slat = parseFloat(this.dataset.lat);
+                    var slon = parseFloat(this.dataset.lon);
+                    var latlng = {lat: slat, lng: slon};
+                    if(marker){ map.removeLayer(marker); }
+                    marker = L.marker(latlng).addTo(map);
+                    updateFields(latlng);
+                    map.flyTo([slat, slon], 16);
+                    if(searchInput) searchInput.value = this.textContent;
+                    clearSuggestions();
+                });
+            });
+        }
+        function searchAddress(q){
+            var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=VN&limit=5&q=' + encodeURIComponent(q);
+            fetch(url, { headers: { 'Accept-Language': 'vi' } })
+                .then(function(res){ return res.json(); })
+                .then(function(data){
+                    if(Array.isArray(data) && data.length){
+                        renderSuggestions(data);
+                    } else { clearSuggestions(); }
+                })
+                .catch(function(err){ console.warn('Geocode error', err); clearSuggestions(); });
+        }
+        if(searchInput){
+            searchInput.addEventListener('input', function(){
+                var q = this.value.trim();
+                clearTimeout(debounceTimer);
+                if(q.length < 3){ clearSuggestions(); return; }
+                debounceTimer = setTimeout(function(){ searchAddress(q); }, 300);
+            });
+        }
+        document.addEventListener('click', function(e){
+            if(!e.target.closest('#addressSearchWrapperTR')){ clearSuggestions(); }
+        });
+    })();
+</script>
+<script>
+  (function(){
+    // Modal map đã được quản lý toàn cục trong base_admin.html
+  })();
+</script>
+{% endblock %}
+

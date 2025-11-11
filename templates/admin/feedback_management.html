@@ -1,0 +1,269 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Quản lý Phản ánh - Admin{% endblock %}
+
+{% block page_title %}Quản lý Phản ánh của người dân{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="fas fa-comments me-2"></i>Quản lý Phản ánh
+        </h1>
+    </div>
+    
+    <!-- Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="severity" class="form-label">Mức độ nghiêm trọng</label>
+                    <select name="severity" id="severity" class="form-select">
+                        <option value="">Tất cả</option>
+                        <option value="high" {% if request.args.get('severity') == 'high' %}selected{% endif %}>Cao</option>
+                        <option value="medium" {% if request.args.get('severity') == 'medium' %}selected{% endif %}>Trung bình</option>
+                        <option value="low" {% if request.args.get('severity') == 'low' %}selected{% endif %}>Thấp</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Trạng thái</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Tất cả</option>
+                        <option value="pending" {{ 'selected' if status == 'pending' else '' }}>Chờ xử lý</option>
+                        <option value="in_progress" {{ 'selected' if status == 'in_progress' else '' }}>Đang xử lý</option>
+                        <option value="resolved" {{ 'selected' if status == 'resolved' else '' }}>Đã giải quyết</option>
+                        <option value="rejected" {{ 'selected' if status == 'rejected' else '' }}>Từ chối</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="category" class="form-label">Loại phản ánh</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">Tất cả</option>
+                        <option value="o_ga" {{ 'selected' if category == 'o_ga' else '' }}>Ổ gà đường xá</option>
+                        <option value="rac_thai" {{ 'selected' if category == 'rac_thai' else '' }}>Rác thải</option>
+                        <option value="mat_dien" {{ 'selected' if category == 'mat_dien' else '' }}>Mất điện</option>
+                        <option value="an_ninh" {{ 'selected' if category == 'an_ninh' else '' }}>An ninh</option>
+                        <option value="khac" {{ 'selected' if category == 'khac' else '' }}>Khác</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="kind" class="form-label">Phân loại</label>
+                    <select class="form-select" id="kind" name="kind">
+                        <option value="">Tất cả</option>
+                        <option value="phan_anh" {{ 'selected' if kind == 'phan_anh' else '' }}>Phản ánh</option>
+                        <option value="khieu_nai" {{ 'selected' if kind == 'khieu_nai' else '' }}>Khiếu nại</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i>Lọc
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        {% if current_user.role == 'admin' %}
+                        <a class="btn btn-warning" href="{{ url_for('admin.classify_all_feedbacks') }}">
+                            <i class="fas fa-robot me-1"></i>Phân loại AI (tất cả)
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Feedbacks List -->
+    <div class="row">
+        {% if feedbacks.items %}
+            {% for feedback in feedbacks.items %}
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">
+                                    <i class="fas fa-comment-alt me-2"></i>{{ feedback.title }}
+                                </h6>
+                                <small class="text-muted">
+                                    Gửi bởi: {{ feedback.user.full_name }} - 
+                                    {{ feedback.created_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                                </small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-{{ 'warning' if feedback.status == 'pending' else 'info' if feedback.status == 'in_progress' else 'success' if feedback.status == 'resolved' else 'danger' }} me-2">
+                                    {{ feedback.status | replace('pending', 'Chờ xử lý') | replace('in_progress', 'Đang xử lý') | replace('resolved', 'Đã giải quyết') | replace('rejected', 'Từ chối') }}
+                                </span>
+                                <span class="badge bg-secondary">
+                                    {{ feedback.category | replace('o_ga', 'Ổ gà') | replace('rac_thai', 'Rác thải') | replace('mat_dien', 'Mất điện') | replace('an_ninh', 'An ninh') | replace('khac', 'Khác') }}
+                                </span>
+                                {% if feedback.kind %}
+                                    <span class="badge bg-{{ 'primary' if feedback.kind == 'phan_anh' else 'dark' }} ms-2">
+                                        {{ 'Phản ánh' if feedback.kind == 'phan_anh' else 'Khiếu nại' }}
+                                    </span>
+                                {% endif %}
+                                {% if feedback.severity %}
+                                    {% set severity_confidence = ((feedback.severity_confidence or 0) * 100) | round(0) | int %}
+                                    {% if feedback.severity == 'high' %}
+                                        <span class="badge bg-danger ms-2">
+                                            Mức độ: Cao ({{ severity_confidence }}%)
+                                        </span>
+                                    {% elif feedback.severity == 'medium' %}
+                                        <span class="badge bg-warning ms-2">
+                                            Mức độ: Trung bình ({{ severity_confidence }}%)
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success ms-2">
+                                            Mức độ: Thấp ({{ severity_confidence }}%)
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p><strong>Mô tả:</strong></p>
+                                    <p>{{ feedback.description }}</p>
+                                    {% set clf = classify_info_map.get(feedback.id) %}
+                                    {% if clf %}
+                                        <div class="small text-muted">
+                                            Gợi ý AI: <strong>{{ 'Phản ánh' if clf.label == 'phan_anh' else 'Khiếu nại' }}</strong>
+                                            <span class="badge bg-{{ 'success' if clf.confidence>=0.9 else 'primary' if clf.confidence>=0.75 else 'warning' }} ms-1">{{ (clf.confidence*100)|round(0) }}%</span>
+                                            {% if clf.reasons %}
+                                                <span class="ms-2">Lý do: {{ ', '.join(clf.reasons) }}</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% set files = attachments_map.get(feedback.id) %}
+                                    {% if files %}
+                                        <div class="mb-2">
+                                            <strong>Đính kèm:</strong>
+                                            <div class="mt-2">
+                                                {% for file in files %}
+                                                    {% set ext = file.split('.')[-1].lower() %}
+                                                    {% if ext in ['jpg','jpeg','png','gif'] %}
+                                                        <a href="{{ url_for('uploaded_file', filename=file) }}" target="_blank" rel="noopener">
+                                                            <img src="{{ url_for('uploaded_file', filename=file) }}" class="img-thumbnail me-2 mb-2" style="max-width: 120px; max-height: 90px;" />
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{{ url_for('uploaded_file', filename=file) }}" class="btn btn-outline-primary btn-sm me-2 mb-2" target="_blank">
+                                                            <i class="fas fa-file me-1"></i>{{ file }}
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if feedback.location %}
+                                        <p><strong>Địa điểm:</strong> {{ feedback.location }}</p>
+                                    {% endif %}
+                                    
+                                    {% if feedback.admin_response %}
+                                        <div class="alert alert-info">
+                                            <strong>Phản hồi từ UBND xã:</strong><br>
+                                            {{ feedback.admin_response }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% if current_user.role == 'admin' %}
+                                <div class="col-md-4">
+                                    <form method="POST" action="{{ url_for('admin.update_feedback', id=feedback.id) }}">
+                                        <div class="mb-3">
+                                            <label for="status_{{ feedback.id }}" class="form-label">Cập nhật trạng thái</label>
+                                            <select class="form-select" id="status_{{ feedback.id }}" name="status">
+                                                <option value="pending" {{ 'selected' if feedback.status == 'pending' else '' }}>Chờ xử lý</option>
+                                                <option value="in_progress" {{ 'selected' if feedback.status == 'in_progress' else '' }}>Đang xử lý</option>
+                                                <option value="resolved" {{ 'selected' if feedback.status == 'resolved' else '' }}>Đã giải quyết</option>
+                                                <option value="rejected" {{ 'selected' if feedback.status == 'rejected' else '' }}>Từ chối</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="response_{{ feedback.id }}" class="form-label">Phản hồi</label>
+                                            <textarea class="form-control" id="response_{{ feedback.id }}" name="admin_response" rows="3" placeholder="Nhập phản hồi từ UBND xã...">{{ feedback.admin_response or '' }}</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                            <i class="fas fa-save me-1"></i>Cập nhật
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin.classify_feedback', id=feedback.id) }}" class="mt-2">
+                                        <button type="submit" class="btn btn-warning btn-sm w-100">
+                                            <i class="fas fa-robot me-1"></i>Phân loại AI
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin.delete_feedback', id=feedback.id) }}" class="mt-2" onsubmit="return confirm('Xác nhận xoá phản ánh/khiếu nại này?');">
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                                            <i class="fas fa-trash me-1"></i>Xoá
+                                        </button>
+                                    </form>
+                                </div>
+                                {% else %}
+                                <div class="col-md-4">
+                                    <div class="alert alert-secondary py-2 small">
+                                        Chế độ chỉ xem. Bạn không có quyền thao tác.
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <!-- Pagination -->
+            {% if feedbacks.pages > 1 %}
+                <div class="col-12">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if feedbacks.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.feedback_management', page=feedbacks.prev_num, status=status, category=category, kind=kind, severity=request.args.get('severity','')) }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page in feedbacks.iter_pages() %}
+                                {% if page %}
+                                    {% if page != feedbacks.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('admin.feedback_management', page=page, status=status, category=category, kind=kind, severity=request.args.get('severity','')) }}">{{ page }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if feedbacks.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.feedback_management', page=feedbacks.next_num, status=status, category=category, kind=kind, severity=request.args.get('severity','')) }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Không có phản ánh nào</h5>
+                    <p class="text-muted">Chưa có phản ánh từ người dân hoặc thử thay đổi bộ lọc.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+2025-10-15 19:14:24,101 - INFO - 
+              precision    recall  f1-score   support
+
+   khieu_nai       1.00      1.00      1.00         1
+    phan_anh       1.00      1.00      1.00         2
+
+    accuracy                           1.00         3
+   macro avg       1.00      1.00      1.00         3
+weighted avg       1.00      1.00      1.00         3
+
+2025-10-15 19:15:59,412 - INFO - Đã tải 15 mẫu dữ liệu
+2025-10-15 19:15:59,417 - INFO - Bắt đầu huấn luyện mô hình...
+2025-10-15 19:15:59,427 - INFO - 
+Kết quả đánh giá mô hình:
+2025-10-15 19:15:59,441 - INFO - 
+              precision    recall  f1-score   support
+
+   khieu_nai       1.00      1.00      1.00         1
+    phan_anh       1.00      1.00      1.00         2
+
+    accuracy                           1.00         3
+   macro avg       1.00      1.00      1.00         3
+weighted avg       1.00      1.00      1.00         3
+
+2025-10-15 19:15:59,449 - INFO - Đã lưu mô hình vào thư mục models/
+2025-10-15 19:15:59,452 - INFO - 
+Kiểm tra một số dự đoán:
+2025-10-15 19:15:59,452 - INFO - 
+Text: Đường hư hỏng nặng cần sửa chữa
+2025-10-15 19:15:59,454 - INFO - Dự đoán: phan_anh
+2025-10-15 19:15:59,454 - INFO - Độ tin cậy: 0.54
+2025-10-15 19:15:59,455 - INFO - 
+Text: Khiếu nại về việc cấp giấy chậm trễ
+2025-10-15 19:15:59,455 - INFO - Dự đoán: khieu_nai
+2025-10-15 19:15:59,456 - INFO - Độ tin cậy: 0.63
+2025-10-15 19:15:59,456 - INFO - 
+Text: Rác thải không được thu gom đúng giờ
+2025-10-15 19:15:59,457 - INFO - Dự đoán: phan_anh
+2025-10-15 19:15:59,457 - INFO - Độ tin cậy: 0.51
+2025-10-15 19:19:32,044 - INFO - Đã tải 15 mẫu dữ liệu
+2025-10-15 19:19:32,289 - INFO - Bắt đầu huấn luyện mô hình...
+2025-10-15 19:19:32,300 - INFO - 
+Kết quả đánh giá mô hình:
+2025-10-15 19:19:32,313 - INFO - 
+              precision    recall  f1-score   support
+
+   khieu_nai       1.00      1.00      1.00         1
+    phan_anh       1.00      1.00      1.00         2
+
+    accuracy                           1.00         3
+   macro avg       1.00      1.00      1.00         3
+weighted avg       1.00      1.00      1.00         3
+
+2025-10-15 19:19:32,319 - INFO - Đã lưu mô hình vào thư mục models/
+2025-10-15 19:19:32,321 - INFO - 
+Kiểm tra một số dự đoán:
+2025-10-15 19:19:32,322 - INFO - 
+Text: Đường hư hỏng nặng cần sửa chữa
+2025-10-15 19:19:32,323 - INFO - Dự đoán: phan_anh
+2025-10-15 19:19:32,324 - INFO - Độ tin cậy: 0.56
+2025-10-15 19:19:32,324 - INFO - 
+Text: Khiếu nại về việc cấp giấy chậm trễ
+2025-10-15 19:19:32,325 - INFO - Dự đoán: khieu_nai
+2025-10-15 19:19:32,325 - INFO - Độ tin cậy: 0.67
+2025-10-15 19:19:32,326 - INFO - 
+Text: Rác thải không được thu gom đúng giờ
+2025-10-15 19:19:32,326 - INFO - Dự đoán: phan_anh
+2025-10-15 19:19:32,327 - INFO - Độ tin cậy: 0.53
+2025-10-15 19:21:22,967 - INFO - Đã tải 15 mẫu dữ liệu
+2025-10-15 19:21:23,165 - INFO - Bắt đầu huấn luyện mô hình...
+2025-10-15 19:21:23,181 - INFO - 
+Kết quả đánh giá mô hình:
+2025-10-15 19:21:23,191 - INFO - 
+              precision    recall  f1-score   support
+
+   khieu_nai       1.00      1.00      1.00         3
+    phan_anh       1.00      1.00      1.00         3
+
+    accuracy                           1.00         6
+   macro avg       1.00      1.00      1.00         6
+weighted avg       1.00      1.00      1.00         6
+
+2025-10-15 19:21:23,198 - INFO - Đã lưu mô hình vào thư mục models/
+2025-10-15 19:21:23,200 - INFO - 
+Kiểm tra một số dự đoán:
+2025-10-15 19:21:23,201 - INFO - 
+Text: Đường hư hỏng nặng cần sửa chữa
+2025-10-15 19:21:23,201 - INFO - Dự đoán: phan_anh
+2025-10-15 19:21:23,202 - INFO - Độ tin cậy: 0.63
+2025-10-15 19:21:23,202 - INFO - 
+Text: Khiếu nại về việc cấp giấy chậm trễ
+2025-10-15 19:21:23,203 - INFO - Dự đoán: khieu_nai
+2025-10-15 19:21:23,204 - INFO - Độ tin cậy: 0.69
+2025-10-15 19:21:23,204 - INFO - 
+Text: Rác thải không được thu gom đúng giờ
+2025-10-15 19:21:23,205 - INFO - Dự đoán: phan_anh
+2025-10-15 19:21:23,205 - INFO - Độ tin cậy: 0.66
+2025-10-15 19:24:19,876 - INFO - Đã tải 215 mẫu dữ liệu
+2025-10-15 19:24:20,402 - INFO - Bắt đầu huấn luyện mô hình...
+2025-10-15 19:24:20,454 - INFO - 
+Kết quả đánh giá mô hình:
+2025-10-15 19:24:20,464 - INFO - 
+              precision    recall  f1-score   support
+
+   khieu_nai       1.00      1.00      1.00        43
+    phan_anh       1.00      1.00      1.00        43
+
+    accuracy                           1.00        86
+   macro avg       1.00      1.00      1.00        86
+weighted avg       1.00      1.00      1.00        86
+
+2025-10-15 19:24:20,509 - INFO - Đã lưu mô hình vào thư mục models/
+2025-10-15 19:24:20,511 - INFO - 
+Kiểm tra một số dự đoán:
+2025-10-15 19:24:20,512 - INFO - 
+Text: Đường hư hỏng nặng cần sửa chữa
+2025-10-15 19:24:20,512 - INFO - Dự đoán: phan_anh
+2025-10-15 19:24:20,513 - INFO - Độ tin cậy: 0.76
+2025-10-15 19:24:20,513 - INFO - 
+Text: Khiếu nại về việc cấp giấy chậm trễ
+2025-10-15 19:24:20,514 - INFO - Dự đoán: khieu_nai
+2025-10-15 19:24:20,514 - INFO - Độ tin cậy: 0.92
+2025-10-15 19:24:20,515 - INFO - 
+Text: Rác thải không được thu gom đúng giờ
+2025-10-15 19:24:20,515 - INFO - Dự đoán: khieu_nai
+2025-10-15 19:24:20,516 - INFO - Độ tin cậy: 0.61

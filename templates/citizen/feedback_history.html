@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Lịch sử phản ánh - Citizen{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="fas fa-history me-2"></i>Lịch sử phản ánh
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{{ url_for('citizen.submit_feedback') }}" class="btn btn-success">
+                <i class="fas fa-plus me-1"></i>Gửi phản ánh mới
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Trạng thái</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Tất cả</option>
+                        <option value="pending" {{ 'selected' if status == 'pending' else '' }}>Chờ xử lý</option>
+                        <option value="in_progress" {{ 'selected' if status == 'in_progress' else '' }}>Đang xử lý</option>
+                        <option value="resolved" {{ 'selected' if status == 'resolved' else '' }}>Đã giải quyết</option>
+                        <option value="rejected" {{ 'selected' if status == 'rejected' else '' }}>Từ chối</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="category" class="form-label">Loại phản ánh</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">Tất cả</option>
+                        <option value="o_ga" {{ 'selected' if category == 'o_ga' else '' }}>Ổ gà đường xá</option>
+                        <option value="rac_thai" {{ 'selected' if category == 'rac_thai' else '' }}>Rác thải</option>
+                        <option value="mat_dien" {{ 'selected' if category == 'mat_dien' else '' }}>Mất điện</option>
+                        <option value="an_ninh" {{ 'selected' if category == 'an_ninh' else '' }}>An ninh</option>
+                        <option value="khac" {{ 'selected' if category == 'khac' else '' }}>Khác</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i>Lọc
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Feedbacks List -->
+    <div class="row">
+        {% if feedbacks.items %}
+            {% for feedback in feedbacks.items %}
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">{{ feedback.title }}</h6>
+                                <small class="text-muted">
+                                    Gửi ngày: {{ feedback.created_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                                    {% if feedback.updated_at != feedback.created_at %}
+                                        - Cập nhật: {{ feedback.updated_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <div>
+                                <span class="badge bg-{{ 'warning' if feedback.status == 'pending' else 'info' if feedback.status == 'in_progress' else 'success' if feedback.status == 'resolved' else 'danger' }} me-2">
+                                    {{ feedback.status | replace('pending', 'Chờ xử lý') | replace('in_progress', 'Đang xử lý') | replace('resolved', 'Đã giải quyết') | replace('rejected', 'Từ chối') }}
+                                </span>
+                                <span class="badge bg-secondary">
+                                    {{ feedback.category | replace('o_ga', 'Ổ gà') | replace('rac_thai', 'Rác thải') | replace('mat_dien', 'Mất điện') | replace('an_ninh', 'An ninh') | replace('khac', 'Khác') }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Mô tả:</strong> {{ feedback.description }}</p>
+                            
+                            {% if feedback.location %}
+                                <p><strong>Địa điểm:</strong> {{ feedback.location }}</p>
+                            {% endif %}
+                            
+                            {% if feedback.admin_response %}
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-reply me-2"></i>Phản hồi từ UBND xã:</h6>
+                                    {{ feedback.admin_response }}
+                                    {% if feedback.resolved_at %}
+                                        <hr>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Giải quyết ngày: {{ feedback.resolved_at | vn_datetime('%d/%m/%Y %H:%M') }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if feedback.status == 'pending' %}
+                                        <i class="fas fa-clock text-warning me-1"></i>
+                                        <small class="text-muted">Phản ánh đang chờ xử lý</small>
+                                    {% elif feedback.status == 'in_progress' %}
+                                        <i class="fas fa-cog fa-spin text-info me-1"></i>
+                                        <small class="text-muted">Phản ánh đang được xử lý</small>
+                                    {% elif feedback.status == 'resolved' %}
+                                        <i class="fas fa-check-circle text-success me-1"></i>
+                                        <small class="text-muted">Phản ánh đã được giải quyết</small>
+                                    {% else %}
+                                        <i class="fas fa-times-circle text-danger me-1"></i>
+                                        <small class="text-muted">Phản ánh đã bị từ chối</small>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url_for('citizen.feedback_detail', id=feedback.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye me-1"></i>Chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <!-- Pagination -->
+            {% if feedbacks.pages > 1 %}
+                <div class="col-12">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if feedbacks.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('citizen.feedback_history', page=feedbacks.prev_num, status=status, category=category) }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page in feedbacks.iter_pages() %}
+                                {% if page %}
+                                    {% if page != feedbacks.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('citizen.feedback_history', page=page, status=status, category=category) }}">{{ page }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if feedbacks.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('citizen.feedback_history', page=feedbacks.next_num, status=status, category=category) }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-comment-alt fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Không có phản ánh nào</h5>
+                    <p class="text-muted">Bạn chưa gửi phản ánh nào hoặc thử thay đổi bộ lọc.</p>
+                    <a href="{{ url_for('citizen.submit_feedback') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i>Gửi phản ánh đầu tiên
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

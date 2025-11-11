@@ -1,0 +1,87 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Thêm đối tượng chính sách{% endblock %}
+{% block page_title %}Thêm đối tượng{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" id="beneficiaryForm" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">{{ form.target_type.label(class="form-label") }}{{ form.target_type(class="form-select") }}</div>
+            <div class="mb-3">{{ form.household_id.label(class="form-label") }}{{ form.household_id(class="form-select", id="household_id") }}</div>
+            <div class="mb-3">{{ form.resident_id.label(class="form-label") }}{{ form.resident_id(class="form-select", id="resident_id") }}</div>
+            <div class="mb-3">{{ form.category_id.label(class="form-label required") }}{{ form.category_id(class="form-select" + (" is-invalid" if form.category_id.errors else "")) }}
+              {% if form.category_id.errors %}<div class="invalid-feedback">{{ form.category_id.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3">{{ form.start_date.label(class="form-label required") }}{{ form.start_date(class="form-control" + (" is-invalid" if form.start_date.errors else "")) }}
+              {% if form.start_date.errors %}<div class="invalid-feedback">{{ form.start_date.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3">{{ form.end_date.label(class="form-label required") }}{{ form.end_date(class="form-control" + (" is-invalid" if form.end_date.errors else "")) }}
+              {% if form.end_date.errors %}<div class="invalid-feedback">{{ form.end_date.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3 form-check">{{ form.is_active(class="form-check-input", id="is_active") }}<label class="form-check-label" for="is_active">Đang hiệu lực</label></div>
+            <div class="mb-3">{{ form.support_amount.label(class="form-label") }}{{ form.support_amount(class="form-control" + (" is-invalid" if form.support_amount.errors else ""), placeholder="VD: 500000") }}
+              {% if form.support_amount.errors %}<div class="invalid-feedback">{{ form.support_amount.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3">{{ form.notes.label(class="form-label") }}{{ form.notes(class="form-control") }}</div>
+            <div class="text-end"><button class="btn btn-success" type="submit"><i class="fas fa-save me-1"></i>Lưu</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const targetType = document.getElementById('target_type');
+    const householdSelect = document.getElementById('household_id');
+    const residentSelect = document.getElementById('resident_id');
+
+    function clearResidents() {
+      residentSelect.innerHTML = '';
+      const opt = document.createElement('option');
+      opt.value = 0; opt.textContent = '— Không chọn —';
+      residentSelect.appendChild(opt);
+    }
+
+    async function loadResidents(householdId) {
+      if (!householdId) { clearResidents(); return; }
+      const res = await fetch(`/admin/api/household/${householdId}/residents`);
+      const data = await res.json();
+      residentSelect.innerHTML = '';
+      if (!data.length) {
+        const opt = document.createElement('option');
+        opt.value = 0; opt.textContent = '— Không có nhân khẩu —';
+        residentSelect.appendChild(opt);
+        return;
+      }
+      data.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = `${r.full_name} (${r.household_code})`;
+        residentSelect.appendChild(opt);
+      });
+    }
+
+    // toggle fields by target type
+    function toggleByTarget() {
+      const isHousehold = targetType.value === 'household';
+      residentSelect.disabled = isHousehold;
+      if (isHousehold) { clearResidents(); }
+      else { loadResidents(householdSelect.value); }
+    }
+
+    if (targetType) targetType.addEventListener('change', toggleByTarget);
+    if (householdSelect) householdSelect.addEventListener('change', function(){
+      if (targetType.value === 'resident') loadResidents(this.value);
+    });
+
+    // init on load
+    toggleByTarget();
+  });
+  </script>
+{% endblock %}

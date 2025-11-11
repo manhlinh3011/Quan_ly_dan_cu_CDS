@@ -1,0 +1,177 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Đối tượng chính sách - Admin{% endblock %}
+
+{% block page_title %}Đối tượng chính sách{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('admin.add_benefit_category') }}" class="btn btn-success me-2"><i class="fas fa-plus me-1"></i>Danh mục</a>
+            <a href="{{ url_for('admin.add_beneficiary') }}" class="btn btn-primary me-2"><i class="fas fa-user-plus me-1"></i>Đối tượng</a>
+            {% endif %}
+            <a href="{{ url_for('admin.benefits', target_type=target_type, status=status, category_id=category_id, hamlet=hamlet, export='csv') }}" class="btn btn-outline-secondary"><i class="fas fa-file-csv me-1"></i>Xuất CSV</a>
+        </div>
+    </div>
+
+    <form method="GET" class="row g-3 mb-3">
+        <div class="col-md-2">
+            <label class="form-label">Đối tượng</label>
+            <select class="form-select" name="target_type">
+                <option value="">Tất cả</option>
+                <option value="household" {{ 'selected' if target_type=='household' else '' }}>Hộ gia đình</option>
+                <option value="resident" {{ 'selected' if target_type=='resident' else '' }}>Nhân khẩu</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Trạng thái</label>
+            <select class="form-select" name="status">
+                <option value="">Tất cả</option>
+                <option value="active" {{ 'selected' if status=='active' else '' }}>Đang hiệu lực</option>
+                <option value="inactive" {{ 'selected' if status=='inactive' else '' }}>Ngừng</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Danh mục</label>
+            <select class="form-select" name="category_id">
+                <option value="">Tất cả</option>
+                {% for c in categories %}
+                    <option value="{{ c.id }}" {{ 'selected' if category_id==c.id else '' }}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Thôn/Xóm</label>
+            <select class="form-select" name="hamlet">
+                <option value="">Tất cả</option>
+                {% for h in hamlets %}
+                    <option value="{{ h }}" {{ 'selected' if hamlet==h else '' }}>{{ h }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Tìm nhanh</label>
+            <input type="text" class="form-control" name="q" value="{{ q or '' }}" placeholder="Tên/Mã hộ">
+        </div>
+        <div class="col-auto d-flex align-items-end">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-filter me-1"></i>Lọc</button>
+        </div>
+    </form>
+
+    <div class="mb-3">
+        <div class="btn-group" role="group" aria-label="Chuyển tab">
+            <button type="button" class="btn btn-primary btn-tab" data-tab="categories"><i class="fas fa-list me-1"></i>Danh mục</button>
+            <button type="button" class="btn btn-outline-primary btn-tab" data-tab="beneficiaries"><i class="fas fa-users me-1"></i>Đối tượng</button>
+        </div>
+    </div>
+
+    <!-- Tab: Danh mục -->
+    <div id="tab-categories">
+        <div class="card mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center"><strong>Danh mục</strong><small class="text-muted">(sửa/xóa)</small></div>
+            <div class="card-body card-list-scroll">
+                    {% if categories %}
+                        <ul class="list-group">
+                            {% for c in categories %}
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="me-2">
+                                            <a class="text-decoration-none fw-semibold d-block" href="{{ url_for('admin.benefits_by_category', category_id=c.id, target_type=target_type, status=status, hamlet=hamlet, q=q) }}">
+                                                {{ c.name }} <small class="text-muted">({{ c.code }})</small>
+                                            </a>
+                                            {% if c.support_amount %}
+                                                <div class="text-muted small currency-text">Mức hỗ trợ: {{ c.support_amount|currency_vnd }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <span class="d-inline-flex align-items-center gap-2 text-nowrap">
+                                            <span class="badge bg-secondary me-1">{{ c.target_type }}</span>
+                                            {% if current_user.role == 'admin' %}
+                                            <a class="btn btn-sm btn-outline-warning" href="{{ url_for('admin.edit_benefit_category', id=c.id) }}"><i class="fas fa-edit"></i></a>
+                                            <form method="POST" action="{{ url_for('admin.delete_benefit_category', id=c.id) }}" class="d-inline m-0" onsubmit="return confirm('Xóa danh mục?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                            {% else %}
+                                            <span class="text-muted small">Chỉ xem</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Chưa có danh mục.</p>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Đối tượng -->
+    <div id="tab-beneficiaries" class="d-none">
+        <div class="card">
+            <div class="card-header bg-light"><strong>Đối tượng</strong></div>
+            <div class="card-body">
+                    {% if items %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-compact">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Đối tượng</th>
+                                        <th>Mã hộ</th>
+                                        <th>Họ tên</th>
+                                        <th>Danh mục</th>
+                                        <th>Thôn/Xóm</th>
+                                        <th class="text-end col-amount">Mức hỗ trợ</th>
+                                        <th>Thời gian</th>
+                                        <th>Đang hiệu lực</th>
+                                        <th>Đã chi trả</th>
+                                        <th class="action-col nowrap">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for b, c, h, r in items %}
+                                        <tr>
+                                            <td>{{ 'Hộ' if b.target_type=='household' else 'Nhân khẩu' }}</td>
+                                            <td>{{ h.household_code if h else (r.household.household_code if r and r.household else '-') }}</td>
+                                            <td>{{ r.full_name if r else (h.head_of_household if h else '-') }}</td>
+                                            <td>{{ c.name }}</td>
+                                            <td>{{ h.hamlet if h else (r.household.hamlet if r and r.household else '-') }}</td>
+                                            <td class="text-end currency-text">{{ (b.support_amount or c.support_amount) | currency_vnd }}</td>
+                                            <td>{{ b.start_date.strftime('%d/%m/%Y') }} - {{ b.end_date.strftime('%d/%m/%Y') if b.end_date else '-' }}</td>
+                                            <td><span class="badge bg-{{ 'success' if b.is_active else 'secondary' }}">{{ 'Đang hiệu lực' if b.is_active else 'Ngừng' }}</span></td>
+                                            <td>
+                                                {% if current_user.role == 'admin' %}
+                                                <form method="POST" action="{{ url_for('admin.toggle_beneficiary_paid', id=b.id) }}" class="d-inline">
+                                                    <button class="btn btn-sm {{ 'btn-success' if b.is_paid else 'btn-outline-secondary' }}">
+                                                        <i class="fas {{ 'fa-check-circle' if b.is_paid else 'fa-circle' }} me-1"></i>{{ 'Đã chi' if b.is_paid else 'Chưa chi' }}
+                                                    </button>
+                                                </form>
+                                                {% else %}
+                                                <span class="badge bg-{{ 'success' if b.is_paid else 'secondary' }}">{{ 'Đã chi' if b.is_paid else 'Chưa chi' }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if current_user.role == 'admin' %}
+                                                <a class="btn btn-sm btn-outline-warning" href="{{ url_for('admin.edit_beneficiary', id=b.id) }}"><i class="fas fa-edit"></i></a>
+                                                <form method="POST" action="{{ url_for('admin.delete_beneficiary', id=b.id) }}" class="d-inline" onsubmit="return confirm('Xóa đối tượng?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </form>
+                                                {% else %}
+                                                <span class="text-muted small">Chỉ xem</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Chưa có đối tượng.</p>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

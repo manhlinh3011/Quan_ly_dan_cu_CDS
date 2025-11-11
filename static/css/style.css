@@ -1,0 +1,622 @@
+/* Unified form validation visuals */
+.was-validated .form-control:invalid, .form-control.is-invalid,
+.was-validated .form-select:invalid, .form-select.is-invalid {
+  border-color: #dc3545 !important; /* Bootstrap danger */
+  padding-right: calc(1.5em + .75rem);
+  background-image: none;
+}
+.invalid-feedback { display: block; }
+
+/* Extra spacing on citizen dashboard to avoid overlap */
+.citizen-dashboard .card-header,
+.citizen-dashboard .card-body {
+  position: relative;
+}
+
+/* Vietnamese Government Digital Transformation System Styles */
+
+/* Root Variables */
+:root {
+    --primary-color: #0066cc;
+    --secondary-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --government-blue: #003f7f;
+    --government-gold: #ffd700;
+    --text-color: #2c3e50;
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: #f5f6fa;
+    line-height: 1.6;
+}
+
+/* Custom Utility Classes */
+.text-government {
+    color: var(--government-blue) !important;
+}
+
+.bg-government {
+    background-color: var(--government-blue) !important;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, var(--government-blue) 0%, var(--primary-color) 100%);
+}
+
+/* Navigation Styles */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--government-gold) !important;
+}
+
+.navbar-dark .navbar-nav .dropdown-menu {
+    background-color: var(--government-blue);
+    border: none;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.navbar-dark .navbar-nav .dropdown-item {
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--government-gold);
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.card-header h5, .card-header h6 {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+/* Border Left Cards for Statistics */
+.border-left-primary {
+    border-left: 4px solid var(--primary-color) !important;
+}
+
+.border-left-success {
+    border-left: 4px solid var(--secondary-color) !important;
+}
+
+.border-left-warning {
+    border-left: 4px solid var(--warning-color) !important;
+}
+
+.border-left-info {
+    border-left: 4px solid var(--info-color) !important;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, var(--government-blue));
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--secondary-color), #218838);
+    border: none;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Form Styles */
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Badge Styles */
+.badge {
+    font-weight: 500;
+    font-size: 0.75em;
+    padding: 0.35em 0.65em;
+}
+
+/* Table Styles */
+.table {
+    background-color: white;
+}
+
+.table-dark {
+    background: linear-gradient(135deg, var(--government-blue), var(--primary-color));
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 102, 204, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 102, 204, 0.1);
+}
+
+/* Alert Styles */
+.alert {
+    border: none;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.alert-info {
+    background-color: #e3f2fd;
+    border-left-color: var(--info-color);
+    color: #0c5460;
+}
+
+.alert-success {
+    background-color: #e8f5e8;
+    border-left-color: var(--secondary-color);
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-left-color: var(--warning-color);
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-left-color: var(--danger-color);
+    color: #721c24;
+}
+
+/* Pagination Styles */
+.pagination .page-link {
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(135deg, var(--dark-color), #495057) !important;
+    margin-top: auto;
+}
+
+/* Feature Icons */
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    border-radius: 50%;
+    color: white;
+}
+
+/* Timeline Styles for Feedback Detail */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.timeline-item.active .timeline-marker {
+    background-color: var(--primary-color);
+}
+
+/* Jumbotron Alternative (Bootstrap 5 removed it) */
+.jumbotron {
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--government-blue) 0%, var(--primary-color) 100%);
+    border-radius: 8px;
+}
+
+/* Loading Spinner */
+.spinner-border-government {
+    border-top-color: var(--government-blue);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--government-blue);
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+    .jumbotron {
+        padding: 2rem 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar, .btn, .pagination, footer, .card-footer {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+    
+    body {
+        background: white !important;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Status Indicators */
+.status-pending {
+    color: var(--warning-color);
+}
+
+.status-in-progress {
+    color: var(--info-color);
+}
+
+.status-resolved {
+    color: var(--secondary-color);
+}
+
+.status-rejected {
+    color: var(--danger-color);
+}
+
+/* Priority Indicators */
+.priority-urgent {
+    border-left: 4px solid var(--danger-color) !important;
+}
+
+.priority-important {
+    border-left: 4px solid var(--warning-color) !important;
+}
+
+.priority-normal {
+    border-left: 4px solid var(--info-color) !important;
+}
+
+/* Vietnamese Government Official Colors */
+.vietnam-flag-red {
+    color: #da251d !important;
+}
+
+.vietnam-flag-yellow {
+    color: #ffff00 !important;
+}
+
+/* Accessibility Improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid var(--dark-color);
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Search functionality styles */
+.search-container {
+    position: relative;
+    max-width: 400px;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.search-result-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item .result-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.search-result-item .result-subtitle {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* Quick stats animation */
+.stat-card {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #0066cc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Improved table styles */
+.table-responsive-stack {
+    overflow-x: auto;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+    transition: background-color 0.2s ease;
+}
+
+/* Action buttons */
+.action-buttons .btn {
+    margin: 2px;
+    min-width: 80px;
+}
+
+/* Benefits page layout improvements */
+.benefits-layout .card-list-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.table-compact th, .table-compact td {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.col-amount { min-width: 140px; }
+.currency-text { font-variant-numeric: tabular-nums; }
+
+.action-col { width: 140px; }
+.nowrap { white-space: nowrap; }
+
+@media (max-width: 992px) {
+    .action-col { width: auto; }
+}
+
+/* Additional mobile responsive styles */
+@media (max-width: 576px) {
+    .admin-header {
+        padding: 10px 15px;
+    }
+    
+    .admin-header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        margin-bottom: 15px;
+    }
+    
+    .search-container {
+        max-width: 100%;
+    }
+    
+    .btn-group-vertical .btn {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+    }
+}

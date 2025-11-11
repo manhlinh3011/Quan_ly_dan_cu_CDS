@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}Bảng tin UBND xã{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="jumbotron bg-primary text-white text-center py-4 mb-4 rounded">
+        <div class="container">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-bullhorn me-3"></i>
+                Bảng tin UBND Xã
+            </h1>
+            <p class="lead">Thông tin - Thông báo - Chính sách mới nhất</p>
+        </div>
+    </div>
+    
+    <!-- Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="category" class="form-label">Lọc theo loại</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">Tất cả thông báo</option>
+                        <option value="tin_tuc" {{ 'selected' if category == 'tin_tuc' else '' }}>Tin tức</option>
+                        <option value="thong_bao" {{ 'selected' if category == 'thong_bao' else '' }}>Thông báo</option>
+                        <option value="lich_hop" {{ 'selected' if category == 'lich_hop' else '' }}>Lịch họp</option>
+                        <option value="chinh_sach" {{ 'selected' if category == 'chinh_sach' else '' }}>Chính sách mới</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-1"></i>Lọc
+                    </button>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <span class="me-3">Quét QR để truy cập nhanh:</span>
+                        <img src="{{ url_for('bulletin.generate_qr') }}" alt="QR Code" style="width: 80px; height: 80px;" class="border rounded">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Announcements List -->
+    <div class="row">
+        {% if announcements.items %}
+            {% for announcement in announcements.items %}
+                <div class="col-12 mb-4">
+                    <div class="card h-100 {{ 'border-danger' if announcement.priority == 'urgent' else 'border-warning' if announcement.priority == 'important' else '' }}">
+                        {% if announcement.priority == 'urgent' %}
+                            <div class="card-header bg-danger text-white">
+                                <i class="fas fa-exclamation-triangle me-2"></i>KHẨN CẤP
+                            </div>
+                        {% elif announcement.priority == 'important' %}
+                            <div class="card-header bg-warning text-dark">
+                                <i class="fas fa-star me-2"></i>QUAN TRỌNG
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title">
+                                        <a href="{{ url_for('bulletin.detail', id=announcement.id) }}" class="text-decoration-none">
+                                            {{ announcement.title }}
+                                        </a>
+                                    </h5>
+                                    <div class="mb-2">
+                                        <span class="badge bg-secondary me-2">
+                                            {{ announcement.category | replace('tin_tuc', 'Tin tức') | replace('thong_bao', 'Thông báo') | replace('lich_hop', 'Lịch họp') | replace('chinh_sach', 'Chính sách mới') }}
+                                        </span>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            {{ announcement.publish_date.strftime('%d/%m/%Y') if announcement.publish_date else announcement.created_at.strftime('%d/%m/%Y') }}
+                                        </small>
+                                        <small class="text-muted ms-3">
+                                            <i class="fas fa-eye me-1"></i>
+                                            {{ announcement.view_count }} lượt xem
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="card-text">{{ announcement.content[:300] }}{% if announcement.content|length > 300 %}...{% endif %}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if announcement.attachments %}
+                                        <i class="fas fa-paperclip text-muted me-1"></i>
+                                        <small class="text-muted">Có file đính kèm</small>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url_for('bulletin.detail', id=announcement.id) }}" class="btn btn-primary">
+                                    <i class="fas fa-arrow-right me-1"></i>Đọc tiếp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <!-- Pagination -->
+            {% if announcements.pages > 1 %}
+                <div class="col-12">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if announcements.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('bulletin.index', page=announcements.prev_num, category=category) }}">
+                                        <i class="fas fa-chevron-left"></i> Trang trước
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page in announcements.iter_pages() %}
+                                {% if page %}
+                                    {% if page != announcements.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('bulletin.index', page=page, category=category) }}">{{ page }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if announcements.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('bulletin.index', page=announcements.next_num, category=category) }}">
+                                        Trang sau <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có thông báo nào</h5>
+                    <p class="text-muted">
+                        {% if category %}
+                            Không có thông báo nào thuộc loại này. Thử chọn loại khác hoặc xem tất cả.
+                        {% else %}
+                            Hiện tại chưa có thông báo mới nào được xuất bản.
+                        {% endif %}
+                    </p>
+                    {% if category %}
+                        <a href="{{ url_for('bulletin.index') }}" class="btn btn-primary">
+                            <i class="fas fa-list me-1"></i>Xem tất cả thông báo
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Chatbot public -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <strong>Trợ lý hỏi đáp thủ tục/ thông tin xã</strong>
+        </div>
+        <div class="card-body">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-9">
+                    <input type="text" id="chat-msg" class="form-control" placeholder="Ví dụ: Đăng ký kết hôn cần giấy tờ gì?" />
+                </div>
+                <div class="col-md-3 d-grid">
+                    <button id="chat-send" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i>Hỏi</button>
+                </div>
+            </div>
+            <div id="chat-answer" class="mt-3 small text-dark"></div>
+        </div>
+    </div>
+    
+    <!-- Quick Access Info -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle me-2"></i>Thông tin liên hệ
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>UBND Xã</h6>
+                            <p class="mb-0">
+                                <i class="fas fa-map-marker-alt me-1"></i>Địa chỉ: [Địa chỉ UBND xã]<br>
+                                <i class="fas fa-phone me-1"></i>Điện thoại: [Số điện thoại]
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Giờ làm việc</h6>
+                            <p class="mb-0">
+                                <i class="fas fa-clock me-1"></i>Thứ 2 - Thứ 6: 7:30 - 11:30, 13:30 - 17:00<br>
+                                <i class="fas fa-calendar me-1"></i>Thứ 7: 7:30 - 11:30
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Dịch vụ trực tuyến</h6>
+                            <p class="mb-0">
+                                <i class="fas fa-globe me-1"></i>Website: [website]<br>
+                                <i class="fas fa-envelope me-1"></i>Email: [email]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.jumbotron {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.card-title a:hover {
+    color: #0056b3 !important;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('chat-send');
+  const input = document.getElementById('chat-msg');
+  const ans = document.getElementById('chat-answer');
+  function ask(){
+    const message = (input.value || '').trim();
+    if(!message) return;
+    ans.innerHTML = '<em>Đang xử lý...</em>';
+    fetch("{{ url_for('bulletin.public_ai_chat') }}", {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: message, domain:'auto'})})
+      .then(r=>r.json()).then(data=>{
+        const src = (data.sources||[]).map(s=> s.file + ' ('+ s.score +')').join(', ');
+        ans.innerHTML = '<div>'+ (data.answer||'') +'</div>' + (src? '<div class="text-muted mt-2">Nguồn: '+src+'</div>':'' );
+      }).catch(()=>{ ans.innerHTML = 'Không thể trả lời lúc này.'; });
+  }
+  btn.addEventListener('click', ask);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ ask(); }});
+});
+</script>
+{% endblock %}

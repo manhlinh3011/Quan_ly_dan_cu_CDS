@@ -1,0 +1,258 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Nhân khẩu - {{ household.household_code }} - Admin{% endblock %}
+
+{% block page_title %}Quản lý nhân khẩu - {{ household.household_code }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="fas fa-users me-2"></i>Nhân khẩu hộ gia đình: {{ household.household_code }}
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('admin.add_resident', household_id=household.id) }}" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i>Thêm nhân khẩu
+                </a>
+                {% endif %}
+            </div>
+            <a href="{{ url_for('admin.population') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Quay lại
+            </a>
+        </div>
+    </div>
+    
+    <!-- Household Info -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Thông tin hộ gia đình</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Mã hộ:</strong> {{ household.household_code }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Chủ hộ:</strong> {{ household.head_of_household }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Thôn/Xóm:</strong> {{ household.hamlet }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Tổng nhân khẩu:</strong> 
+                    <span class="badge bg-primary">{{ residents | length }} người</span>
+                </div>
+            </div>
+            <div class="row mt-2 align-items-center">
+                <div class="col-md-3">
+                    <strong>Địa chỉ:</strong> {{ household.address }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Điện thoại:</strong> {{ household.phone or 'Chưa có' }}
+                </div>
+            </div>
+            {% if current_user.role == 'admin' %}
+            <div class="row mt-2">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <div class="d-inline-flex align-items-center flex-nowrap gap-2">
+                        <a href="{{ url_for('admin.manage_head_temporary', household_id=household.id) }}" class="btn btn-sm btn-outline-secondary text-nowrap">
+                            <i class="fas fa-clipboard-list me-1"></i>Tạm trú/Tạm vắng (Chủ hộ)
+                        </a>
+                        {% if household.location_lat is not none and household.location_lng is not none %}
+                        <button type="button" class="btn btn-sm btn-outline-primary text-nowrap"
+                                data-bs-toggle="modal" data-bs-target="#mapModal"
+                                data-map-title="Vị trí hộ gia đình: {{ household.household_code }}"
+                                data-lat="{{ '%.6f'|format(household.location_lat) }}"
+                                data-lng="{{ '%.6f'|format(household.location_lng) }}">
+                            <i class="fas fa-map-marker-alt me-1"></i>Xem vị trí map (Chủ hộ)
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn btn-sm btn-outline-secondary text-nowrap" disabled title="Chưa có tọa độ">
+                            <i class="fas fa-map-marker-alt me-1"></i>Xem vị trí map (Chủ hộ)
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row mt-2">
+                <div class="col-md-3">
+                    <strong>CCCD/CMND:</strong> {{ household.head_id_number or '-' }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Ngày sinh:</strong> {{ household.head_birth_date.strftime('%d/%m/%Y') if household.head_birth_date else '-' }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Giới tính:</strong> {{ household.head_gender or '-' }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Nghề nghiệp:</strong> {{ household.head_occupation or '-' }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Residents Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Danh sách nhân khẩu</h5>
+            {% if residents %}
+                <small class="text-muted">{{ residents | length }} người</small>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if residents %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Họ tên</th>
+                                <th>Ngày sinh</th>
+                                <th>Tuổi</th>
+                                <th>Giới tính</th>
+                                <th>Quan hệ với chủ hộ</th>
+                                <th>CMND/CCCD</th>
+                                <th>Nghề nghiệp</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resident in residents %}
+                                <tr>
+                                    <td><strong>{{ resident.full_name }}</strong></td>
+                                    <td>{{ resident.birth_date.strftime('%d/%m/%Y') if resident.birth_date else '-' }}</td>
+                                    <td>
+                                        {% set age = (current_year - resident.birth_date.year) if resident.birth_date else '-' %}
+                                        <span class="badge bg-{{ 'success' if age >= 18 and age < 60 else 'info' if age < 18 else 'secondary' }}">
+                                            {{ age }} tuổi
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-{{ 'venus' if resident.gender == 'Nữ' else 'mars' }} me-1 text-{{ 'danger' if resident.gender == 'Nữ' else 'primary' }}"></i>
+                                        {{ resident.gender }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'warning' if resident.relationship == 'Chủ hộ' else 'secondary' }}">
+                                            {{ resident.relationship }}
+                                        </span>
+                                    </td>
+                                    <td>{{ resident.id_number or '-' }}</td>
+                                    <td>{{ resident.occupation or '-' }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a class="btn btn-info" href="{{ url_for('admin.view_resident', id=resident.id) }}" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if current_user.role == 'admin' %}
+                                            <a class="btn btn-warning" href="{{ url_for('admin.edit_resident', id=resident.id) }}" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-secondary" href="{{ url_for('admin.manage_temporary_residence', resident_id=resident.id) }}" title="Tạm trú/Tạm vắng">
+                                                <i class="fas fa-clipboard-list"></i>
+                                            </a>
+                                            {% if resident.current_lat is not none and resident.current_lng is not none %}
+                                            <button type="button" class="btn btn-primary" title="Xem vị trí map"
+                                                    data-bs-toggle="modal" data-bs-target="#mapModal"
+                                                    data-map-title="Vị trí nhân khẩu: {{ resident.full_name }}"
+                                                    data-lat="{{ '%.6f'|format(resident.current_lat) }}"
+                                                    data-lng="{{ '%.6f'|format(resident.current_lng) }}">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="btn btn-outline-secondary" title="Chưa có tọa độ" disabled>
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </button>
+                                            {% endif %}
+                                            <form method="POST" action="{{ url_for('admin.delete_resident', id=resident.id) }}" class="d-inline" onsubmit="return confirm('Xóa nhân khẩu này?');">
+                                                <button class="btn btn-danger" type="submit" title="Xóa">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            {% else %}
+                                            <span class="text-muted small ms-2">Chỉ xem</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Summary Statistics -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h6>Thống kê:</h6>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">Nam</h6>
+                                        <h4 class="text-primary">{{ residents | selectattr('gender', 'equalto', 'Nam') | list | length }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">Nữ</h6>
+                                        <h4 class="text-danger">{{ residents | selectattr('gender', 'equalto', 'Nữ') | list | length }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">Trẻ em (&lt; 18)</h6>
+                                        <h4 class="text-info">{{ children_count }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">Người cao tuổi (&gt; 60)</h6>
+                                        <h4 class="text-secondary">{{ elderly_count }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-user-plus fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có nhân khẩu nào</h5>
+                    <p class="text-muted">Thêm thành viên đầu tiên cho hộ gia đình này.</p>
+                    {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin.add_resident', household_id=household.id) }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i>Thêm nhân khẩu
+                    </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Resident Details -->
+<div class="modal fade" id="residentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết nhân khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="residentModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal map dùng global trong base_admin.html; bỏ bản cục bộ #}
+{% endblock %}
+
+{# JS modal map dùng handler global trong base_admin.html #}

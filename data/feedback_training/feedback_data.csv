@@ -1,0 +1,216 @@
+title,description,label
+Phản ánh về tình trạng đường hỏng,Đường bị xuống cấp nghiêm trọng gây khó khăn cho việc đi lại,phan_anh
+Khiếu nại về việc cấp giấy chứng nhận,Đã nộp hồ sơ 2 tháng nhưng chưa được giải quyết,khieu_nai
+Phản ánh tình trạng rác thải,Rác thải tập kết không đúng nơi quy định gây ô nhiễm môi trường,phan_anh
+Khiếu nại thái độ phục vụ,Cán bộ thái độ không tốt khi tiếp nhận hồ sơ,khieu_nai
+Phản ánh về tình trạng điện,Khu vực thường xuyên bị mất điện vào buổi tối,phan_anh
+Khiếu nại về kết quả xét duyệt,Không đồng ý với kết quả xét duyệt hộ nghèo,khieu_nai
+Phản ánh về an ninh trật tự,Tình trạng đánh bạc diễn ra công khai trong khu dân cư,phan_anh
+Khiếu nại việc thu phí,Thu phí không đúng quy định và không có biên lai,khieu_nai
+Phản ánh tình trạng nước sạch,Nước sinh hoạt thường xuyên bị đục và có mùi,phan_anh
+Khiếu nại về đất đai,Ranh giới đất bị lấn chiếm không được giải quyết,khieu_nai
+Phản ánh về tiếng ồn,Karaoke gây ồn ào sau 23h đêm,phan_anh
+Khiếu nại về bồi thường,Đền bù giải phóng mặt bằng không thỏa đáng,khieu_nai
+Phản ánh về vệ sinh môi trường,Khu chợ không được dọn dẹp vệ sinh thường xuyên,phan_anh
+Khiếu nại về xây dựng,Công trình xây dựng sai phép gây ảnh hưởng,khieu_nai
+Phản ánh về cây xanh,Cây có nguy cơ đổ vào nhà dân cần được xử lý,phan_anh
+Phản ánh về cây xanh nguy hiểm,Người dân phản ánh về tình trạng cây xanh nguy hiểm kéo dài.,phan_anh
+Không đồng ý với lấn chiếm đất,Không đồng ý với cách xử lý lấn chiếm đất của cơ quan chức năng.,khieu_nai
+Phản ánh về mất trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý mất trật tự.,phan_anh
+Yêu cầu giải quyết giải quyết hồ sơ chậm,Yêu cầu làm rõ trách nhiệm về giải quyết hồ sơ chậm.,khieu_nai
+Kiến nghị xử lý cây xanh nguy hiểm,Đề nghị cơ quan chức năng kiểm tra và xử lý cây xanh nguy hiểm.,phan_anh
+Tố cáo việc xử lý trách nhiệm,Không đồng ý với cách xử lý xử lý trách nhiệm của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý ô nhiễm,Người dân phản ánh về tình trạng ô nhiễm kéo dài.,phan_anh
+Khiếu nại về lấn chiếm đất,Yêu cầu làm rõ trách nhiệm về lấn chiếm đất.,khieu_nai
+Góp ý về rác thải,Người dân phản ánh về tình trạng rác thải kéo dài.,phan_anh
+Tố cáo việc bồi thường,Đề nghị xem xét lại quyết định liên quan đến bồi thường.,khieu_nai
+Góp ý về ô nhiễm,Đề nghị cơ quan chức năng kiểm tra và xử lý ô nhiễm.,phan_anh
+Yêu cầu giải quyết bồi thường,Đã nộp hồ sơ nhưng chưa được giải quyết về bồi thường.,khieu_nai
+Kiến nghị xử lý cây xanh nguy hiểm,Đề nghị cơ quan chức năng kiểm tra và xử lý cây xanh nguy hiểm.,phan_anh
+Tố cáo việc thái độ phục vụ,Đã nộp hồ sơ nhưng chưa được giải quyết về thái độ phục vụ.,khieu_nai
+Góp ý về an ninh trật tự,an ninh trật tự không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về xây dựng sai phép,Yêu cầu làm rõ trách nhiệm về xây dựng sai phép.,khieu_nai
+Kiến nghị xử lý an ninh trật tự,Người dân phản ánh về tình trạng an ninh trật tự kéo dài.,phan_anh
+Tố cáo việc bồi thường,Không đồng ý với cách xử lý bồi thường của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý rác thải,Khu vực thường xuyên bị rác thải gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về giải quyết hồ sơ chậm,Không đồng ý với cách xử lý giải quyết hồ sơ chậm của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý vệ sinh môi trường,Đề nghị cơ quan chức năng kiểm tra và xử lý vệ sinh môi trường.,phan_anh
+Tố cáo việc lấn chiếm đất,Đã nộp hồ sơ nhưng chưa được giải quyết về lấn chiếm đất.,khieu_nai
+Phản ánh về an ninh trật tự,Người dân phản ánh về tình trạng an ninh trật tự kéo dài.,phan_anh
+Không đồng ý với xây dựng sai phép,Không đồng ý với cách xử lý xây dựng sai phép của cơ quan chức năng.,khieu_nai
+Phản ánh về tiếng ồn,Khu vực thường xuyên bị tiếng ồn gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về quyết định không hợp lý,Yêu cầu làm rõ trách nhiệm về quyết định không hợp lý.,khieu_nai
+Báo cáo tình trạng ngập nước,Khu vực thường xuyên bị ngập nước gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về quyết định không hợp lý,Yêu cầu làm rõ trách nhiệm về quyết định không hợp lý.,khieu_nai
+Kiến nghị xử lý ngập nước,Khu vực thường xuyên bị ngập nước gây khó khăn cho sinh hoạt.,phan_anh
+Yêu cầu giải quyết thu phí không đúng,Yêu cầu làm rõ trách nhiệm về thu phí không đúng.,khieu_nai
+Góp ý về rác thải,Đề nghị cơ quan chức năng kiểm tra và xử lý rác thải.,phan_anh
+Yêu cầu giải quyết kết quả xét duyệt,Đề nghị xem xét lại quyết định liên quan đến kết quả xét duyệt.,khieu_nai
+Kiến nghị xử lý nước sinh hoạt,Người dân phản ánh về tình trạng nước sinh hoạt kéo dài.,phan_anh
+Tố cáo việc cấp giấy chứng nhận,Không đồng ý với cách xử lý cấp giấy chứng nhận của cơ quan chức năng.,khieu_nai
+Góp ý về tiếng ồn,Người dân phản ánh về tình trạng tiếng ồn kéo dài.,phan_anh
+Khiếu nại về lấn chiếm đất,Đề nghị xem xét lại quyết định liên quan đến lấn chiếm đất.,khieu_nai
+Kiến nghị xử lý rác thải,Khu vực thường xuyên bị rác thải gây khó khăn cho sinh hoạt.,phan_anh
+Không đồng ý với xử lý trách nhiệm,Đã nộp hồ sơ nhưng chưa được giải quyết về xử lý trách nhiệm.,khieu_nai
+Phản ánh về vệ sinh môi trường,Đề nghị cơ quan chức năng kiểm tra và xử lý vệ sinh môi trường.,phan_anh
+Không đồng ý với xử lý trách nhiệm,Không đồng ý với cách xử lý xử lý trách nhiệm của cơ quan chức năng.,khieu_nai
+Phản ánh về rác thải,Người dân phản ánh về tình trạng rác thải kéo dài.,phan_anh
+Khiếu nại về kết quả xét duyệt,Yêu cầu làm rõ trách nhiệm về kết quả xét duyệt.,khieu_nai
+Góp ý về mất điện,mất điện không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về lấn chiếm đất,Đề nghị xem xét lại quyết định liên quan đến lấn chiếm đất.,khieu_nai
+Phản ánh về mất điện,Người dân phản ánh về tình trạng mất điện kéo dài.,phan_anh
+Không đồng ý với thái độ phục vụ,Đề nghị xem xét lại quyết định liên quan đến thái độ phục vụ.,khieu_nai
+Báo cáo tình trạng rác thải,rác thải không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Tố cáo việc kết quả xét duyệt,Không đồng ý với cách xử lý kết quả xét duyệt của cơ quan chức năng.,khieu_nai
+Góp ý về vệ sinh môi trường,Đề nghị cơ quan chức năng kiểm tra và xử lý vệ sinh môi trường.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Đề nghị xem xét lại quyết định liên quan đến cấp giấy chứng nhận.,khieu_nai
+Kiến nghị xử lý ô nhiễm,ô nhiễm không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Tố cáo việc bồi thường,Không đồng ý với cách xử lý bồi thường của cơ quan chức năng.,khieu_nai
+Phản ánh về đường hỏng,đường hỏng không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Yêu cầu giải quyết kỷ luật cán bộ,Đề nghị xem xét lại quyết định liên quan đến kỷ luật cán bộ.,khieu_nai
+Góp ý về vệ sinh môi trường,vệ sinh môi trường không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Không đồng ý với kết quả xét duyệt,Yêu cầu làm rõ trách nhiệm về kết quả xét duyệt.,khieu_nai
+Kiến nghị xử lý nước sinh hoạt,nước sinh hoạt không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về bồi thường,Yêu cầu làm rõ trách nhiệm về bồi thường.,khieu_nai
+Kiến nghị xử lý ngập nước,ngập nước không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về kỷ luật cán bộ,Không đồng ý với cách xử lý kỷ luật cán bộ của cơ quan chức năng.,khieu_nai
+Phản ánh về ô nhiễm,Khu vực thường xuyên bị ô nhiễm gây khó khăn cho sinh hoạt.,phan_anh
+Tố cáo việc kết quả xét duyệt,Không đồng ý với cách xử lý kết quả xét duyệt của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý thiếu nước,Người dân phản ánh về tình trạng thiếu nước kéo dài.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Đề nghị xem xét lại quyết định liên quan đến cấp giấy chứng nhận.,khieu_nai
+Góp ý về rác thải,Khu vực thường xuyên bị rác thải gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về thu phí không đúng,Đề nghị xem xét lại quyết định liên quan đến thu phí không đúng.,khieu_nai
+Góp ý về mất trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý mất trật tự.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Đề nghị xem xét lại quyết định liên quan đến cấp giấy chứng nhận.,khieu_nai
+Kiến nghị xử lý đường hỏng,Đề nghị cơ quan chức năng kiểm tra và xử lý đường hỏng.,phan_anh
+Khiếu nại về bồi thường,Đề nghị xem xét lại quyết định liên quan đến bồi thường.,khieu_nai
+Phản ánh về tiếng ồn,Khu vực thường xuyên bị tiếng ồn gây khó khăn cho sinh hoạt.,phan_anh
+Không đồng ý với lấn chiếm đất,Yêu cầu làm rõ trách nhiệm về lấn chiếm đất.,khieu_nai
+Kiến nghị xử lý mất trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý mất trật tự.,phan_anh
+Khiếu nại về bồi thường,Không đồng ý với cách xử lý bồi thường của cơ quan chức năng.,khieu_nai
+Phản ánh về an ninh trật tự,an ninh trật tự không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Không đồng ý với cách xử lý cấp giấy chứng nhận của cơ quan chức năng.,khieu_nai
+Góp ý về tiếng ồn,tiếng ồn không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Yêu cầu giải quyết kết quả xét duyệt,Yêu cầu làm rõ trách nhiệm về kết quả xét duyệt.,khieu_nai
+Báo cáo tình trạng mất trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý mất trật tự.,phan_anh
+Tố cáo việc kỷ luật cán bộ,Không đồng ý với cách xử lý kỷ luật cán bộ của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý cây xanh nguy hiểm,Khu vực thường xuyên bị cây xanh nguy hiểm gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về quyết định không hợp lý,Đã nộp hồ sơ nhưng chưa được giải quyết về quyết định không hợp lý.,khieu_nai
+Góp ý về thiếu nước,Người dân phản ánh về tình trạng thiếu nước kéo dài.,phan_anh
+Khiếu nại về lấn chiếm đất,Đề nghị xem xét lại quyết định liên quan đến lấn chiếm đất.,khieu_nai
+Phản ánh về đường hỏng,Khu vực thường xuyên bị đường hỏng gây khó khăn cho sinh hoạt.,phan_anh
+Yêu cầu giải quyết kỷ luật cán bộ,Đã nộp hồ sơ nhưng chưa được giải quyết về kỷ luật cán bộ.,khieu_nai
+Báo cáo tình trạng mất điện,Người dân phản ánh về tình trạng mất điện kéo dài.,phan_anh
+Tố cáo việc xây dựng sai phép,Không đồng ý với cách xử lý xây dựng sai phép của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý rác thải,Đề nghị cơ quan chức năng kiểm tra và xử lý rác thải.,phan_anh
+Không đồng ý với lấn chiếm đất,Đã nộp hồ sơ nhưng chưa được giải quyết về lấn chiếm đất.,khieu_nai
+Báo cáo tình trạng thiếu nước,Đề nghị cơ quan chức năng kiểm tra và xử lý thiếu nước.,phan_anh
+Không đồng ý với cấp giấy chứng nhận,Đã nộp hồ sơ nhưng chưa được giải quyết về cấp giấy chứng nhận.,khieu_nai
+Báo cáo tình trạng mất điện,Đề nghị cơ quan chức năng kiểm tra và xử lý mất điện.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Đã nộp hồ sơ nhưng chưa được giải quyết về cấp giấy chứng nhận.,khieu_nai
+Kiến nghị xử lý vệ sinh môi trường,vệ sinh môi trường không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về xây dựng sai phép,Yêu cầu làm rõ trách nhiệm về xây dựng sai phép.,khieu_nai
+Góp ý về nước sinh hoạt,Khu vực thường xuyên bị nước sinh hoạt gây khó khăn cho sinh hoạt.,phan_anh
+Tố cáo việc thái độ phục vụ,Không đồng ý với cách xử lý thái độ phục vụ của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý rác thải,rác thải không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về xử lý trách nhiệm,Yêu cầu làm rõ trách nhiệm về xử lý trách nhiệm.,khieu_nai
+Báo cáo tình trạng tiếng ồn,tiếng ồn không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về xử lý trách nhiệm,Đã nộp hồ sơ nhưng chưa được giải quyết về xử lý trách nhiệm.,khieu_nai
+Kiến nghị xử lý ô nhiễm,Đề nghị cơ quan chức năng kiểm tra và xử lý ô nhiễm.,phan_anh
+Tố cáo việc lấn chiếm đất,Đã nộp hồ sơ nhưng chưa được giải quyết về lấn chiếm đất.,khieu_nai
+Báo cáo tình trạng an ninh trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý an ninh trật tự.,phan_anh
+Tố cáo việc thu phí không đúng,Đề nghị xem xét lại quyết định liên quan đến thu phí không đúng.,khieu_nai
+Báo cáo tình trạng thiếu nước,thiếu nước không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Yêu cầu giải quyết kỷ luật cán bộ,Đã nộp hồ sơ nhưng chưa được giải quyết về kỷ luật cán bộ.,khieu_nai
+Kiến nghị xử lý an ninh trật tự,Khu vực thường xuyên bị an ninh trật tự gây khó khăn cho sinh hoạt.,phan_anh
+Yêu cầu giải quyết xử lý trách nhiệm,Không đồng ý với cách xử lý xử lý trách nhiệm của cơ quan chức năng.,khieu_nai
+Góp ý về mất trật tự,mất trật tự không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về bồi thường,Đề nghị xem xét lại quyết định liên quan đến bồi thường.,khieu_nai
+Góp ý về ô nhiễm,ô nhiễm không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về lấn chiếm đất,Yêu cầu làm rõ trách nhiệm về lấn chiếm đất.,khieu_nai
+Phản ánh về ngập nước,Đề nghị cơ quan chức năng kiểm tra và xử lý ngập nước.,phan_anh
+Khiếu nại về quyết định không hợp lý,Yêu cầu làm rõ trách nhiệm về quyết định không hợp lý.,khieu_nai
+Phản ánh về ngập nước,Người dân phản ánh về tình trạng ngập nước kéo dài.,phan_anh
+Yêu cầu giải quyết xử lý trách nhiệm,Đã nộp hồ sơ nhưng chưa được giải quyết về xử lý trách nhiệm.,khieu_nai
+Phản ánh về đường hỏng,Người dân phản ánh về tình trạng đường hỏng kéo dài.,phan_anh
+Không đồng ý với giải quyết hồ sơ chậm,Không đồng ý với cách xử lý giải quyết hồ sơ chậm của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý ngập nước,Đề nghị cơ quan chức năng kiểm tra và xử lý ngập nước.,phan_anh
+Yêu cầu giải quyết quyết định không hợp lý,Đã nộp hồ sơ nhưng chưa được giải quyết về quyết định không hợp lý.,khieu_nai
+Phản ánh về đường hỏng,Người dân phản ánh về tình trạng đường hỏng kéo dài.,phan_anh
+Tố cáo việc giải quyết hồ sơ chậm,Đã nộp hồ sơ nhưng chưa được giải quyết về giải quyết hồ sơ chậm.,khieu_nai
+Phản ánh về mất điện,Đề nghị cơ quan chức năng kiểm tra và xử lý mất điện.,phan_anh
+Không đồng ý với cấp giấy chứng nhận,Yêu cầu làm rõ trách nhiệm về cấp giấy chứng nhận.,khieu_nai
+Phản ánh về mất điện,Người dân phản ánh về tình trạng mất điện kéo dài.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Yêu cầu làm rõ trách nhiệm về cấp giấy chứng nhận.,khieu_nai
+Góp ý về vệ sinh môi trường,Người dân phản ánh về tình trạng vệ sinh môi trường kéo dài.,phan_anh
+Khiếu nại về lấn chiếm đất,Đã nộp hồ sơ nhưng chưa được giải quyết về lấn chiếm đất.,khieu_nai
+Góp ý về vệ sinh môi trường,Khu vực thường xuyên bị vệ sinh môi trường gây khó khăn cho sinh hoạt.,phan_anh
+Không đồng ý với giải quyết hồ sơ chậm,Yêu cầu làm rõ trách nhiệm về giải quyết hồ sơ chậm.,khieu_nai
+Báo cáo tình trạng tiếng ồn,tiếng ồn không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Không đồng ý với xây dựng sai phép,Đề nghị xem xét lại quyết định liên quan đến xây dựng sai phép.,khieu_nai
+Góp ý về mất trật tự,Khu vực thường xuyên bị mất trật tự gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về quyết định không hợp lý,Đã nộp hồ sơ nhưng chưa được giải quyết về quyết định không hợp lý.,khieu_nai
+Kiến nghị xử lý vệ sinh môi trường,vệ sinh môi trường không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Không đồng ý với xử lý trách nhiệm,Yêu cầu làm rõ trách nhiệm về xử lý trách nhiệm.,khieu_nai
+Phản ánh về vệ sinh môi trường,vệ sinh môi trường không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Tố cáo việc lấn chiếm đất,Đề nghị xem xét lại quyết định liên quan đến lấn chiếm đất.,khieu_nai
+Phản ánh về ô nhiễm,Đề nghị cơ quan chức năng kiểm tra và xử lý ô nhiễm.,phan_anh
+Yêu cầu giải quyết cấp giấy chứng nhận,Không đồng ý với cách xử lý cấp giấy chứng nhận của cơ quan chức năng.,khieu_nai
+Kiến nghị xử lý đường hỏng,Khu vực thường xuyên bị đường hỏng gây khó khăn cho sinh hoạt.,phan_anh
+Tố cáo việc giải quyết hồ sơ chậm,Đã nộp hồ sơ nhưng chưa được giải quyết về giải quyết hồ sơ chậm.,khieu_nai
+Góp ý về thiếu nước,Người dân phản ánh về tình trạng thiếu nước kéo dài.,phan_anh
+Không đồng ý với kỷ luật cán bộ,Không đồng ý với cách xử lý kỷ luật cán bộ của cơ quan chức năng.,khieu_nai
+Phản ánh về tiếng ồn,Khu vực thường xuyên bị tiếng ồn gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về xử lý trách nhiệm,Đã nộp hồ sơ nhưng chưa được giải quyết về xử lý trách nhiệm.,khieu_nai
+Góp ý về cây xanh nguy hiểm,Người dân phản ánh về tình trạng cây xanh nguy hiểm kéo dài.,phan_anh
+Không đồng ý với giải quyết hồ sơ chậm,Đề nghị xem xét lại quyết định liên quan đến giải quyết hồ sơ chậm.,khieu_nai
+Phản ánh về an ninh trật tự,Khu vực thường xuyên bị an ninh trật tự gây khó khăn cho sinh hoạt.,phan_anh
+Yêu cầu giải quyết kết quả xét duyệt,Không đồng ý với cách xử lý kết quả xét duyệt của cơ quan chức năng.,khieu_nai
+Phản ánh về đường hỏng,đường hỏng không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về bồi thường,Đã nộp hồ sơ nhưng chưa được giải quyết về bồi thường.,khieu_nai
+Góp ý về ngập nước,Khu vực thường xuyên bị ngập nước gây khó khăn cho sinh hoạt.,phan_anh
+Không đồng ý với giải quyết hồ sơ chậm,Đã nộp hồ sơ nhưng chưa được giải quyết về giải quyết hồ sơ chậm.,khieu_nai
+Báo cáo tình trạng cây xanh nguy hiểm,Người dân phản ánh về tình trạng cây xanh nguy hiểm kéo dài.,phan_anh
+Tố cáo việc bồi thường,Đề nghị xem xét lại quyết định liên quan đến bồi thường.,khieu_nai
+Báo cáo tình trạng mất trật tự,mất trật tự không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Tố cáo việc cấp giấy chứng nhận,Đã nộp hồ sơ nhưng chưa được giải quyết về cấp giấy chứng nhận.,khieu_nai
+Góp ý về an ninh trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý an ninh trật tự.,phan_anh
+Không đồng ý với giải quyết hồ sơ chậm,Đã nộp hồ sơ nhưng chưa được giải quyết về giải quyết hồ sơ chậm.,khieu_nai
+Báo cáo tình trạng nước sinh hoạt,nước sinh hoạt không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Yêu cầu giải quyết xử lý trách nhiệm,Đã nộp hồ sơ nhưng chưa được giải quyết về xử lý trách nhiệm.,khieu_nai
+Kiến nghị xử lý rác thải,Khu vực thường xuyên bị rác thải gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về giải quyết hồ sơ chậm,Không đồng ý với cách xử lý giải quyết hồ sơ chậm của cơ quan chức năng.,khieu_nai
+Báo cáo tình trạng ngập nước,ngập nước không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Tố cáo việc kỷ luật cán bộ,Yêu cầu làm rõ trách nhiệm về kỷ luật cán bộ.,khieu_nai
+Phản ánh về an ninh trật tự,Người dân phản ánh về tình trạng an ninh trật tự kéo dài.,phan_anh
+Khiếu nại về thái độ phục vụ,Không đồng ý với cách xử lý thái độ phục vụ của cơ quan chức năng.,khieu_nai
+Góp ý về mất trật tự,Người dân phản ánh về tình trạng mất trật tự kéo dài.,phan_anh
+Khiếu nại về lấn chiếm đất,Đề nghị xem xét lại quyết định liên quan đến lấn chiếm đất.,khieu_nai
+Phản ánh về ngập nước,ngập nước không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Yêu cầu giải quyết thái độ phục vụ,Yêu cầu làm rõ trách nhiệm về thái độ phục vụ.,khieu_nai
+Báo cáo tình trạng vệ sinh môi trường,vệ sinh môi trường không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Tố cáo việc thu phí không đúng,Đã nộp hồ sơ nhưng chưa được giải quyết về thu phí không đúng.,khieu_nai
+Kiến nghị xử lý an ninh trật tự,Đề nghị cơ quan chức năng kiểm tra và xử lý an ninh trật tự.,phan_anh
+Không đồng ý với bồi thường,Đã nộp hồ sơ nhưng chưa được giải quyết về bồi thường.,khieu_nai
+Phản ánh về vệ sinh môi trường,Đề nghị cơ quan chức năng kiểm tra và xử lý vệ sinh môi trường.,phan_anh
+Khiếu nại về xây dựng sai phép,Đề nghị xem xét lại quyết định liên quan đến xây dựng sai phép.,khieu_nai
+Phản ánh về mất điện,Người dân phản ánh về tình trạng mất điện kéo dài.,phan_anh
+Tố cáo việc thái độ phục vụ,Yêu cầu làm rõ trách nhiệm về thái độ phục vụ.,khieu_nai
+Phản ánh về rác thải,rác thải không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về quyết định không hợp lý,Đã nộp hồ sơ nhưng chưa được giải quyết về quyết định không hợp lý.,khieu_nai
+Báo cáo tình trạng ô nhiễm,ô nhiễm không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về quyết định không hợp lý,Đề nghị xem xét lại quyết định liên quan đến quyết định không hợp lý.,khieu_nai
+Phản ánh về mất điện,mất điện không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về xây dựng sai phép,Đề nghị xem xét lại quyết định liên quan đến xây dựng sai phép.,khieu_nai
+Báo cáo tình trạng đường hỏng,Đề nghị cơ quan chức năng kiểm tra và xử lý đường hỏng.,phan_anh
+Tố cáo việc xây dựng sai phép,Đề nghị xem xét lại quyết định liên quan đến xây dựng sai phép.,khieu_nai
+Báo cáo tình trạng tiếng ồn,Khu vực thường xuyên bị tiếng ồn gây khó khăn cho sinh hoạt.,phan_anh
+Tố cáo việc cấp giấy chứng nhận,Yêu cầu làm rõ trách nhiệm về cấp giấy chứng nhận.,khieu_nai
+Góp ý về nước sinh hoạt,Khu vực thường xuyên bị nước sinh hoạt gây khó khăn cho sinh hoạt.,phan_anh
+Khiếu nại về xây dựng sai phép,Yêu cầu làm rõ trách nhiệm về xây dựng sai phép.,khieu_nai
+Báo cáo tình trạng thiếu nước,Đề nghị cơ quan chức năng kiểm tra và xử lý thiếu nước.,phan_anh
+Yêu cầu giải quyết bồi thường,Yêu cầu làm rõ trách nhiệm về bồi thường.,khieu_nai
+Góp ý về nước sinh hoạt,Người dân phản ánh về tình trạng nước sinh hoạt kéo dài.,phan_anh
+Khiếu nại về lấn chiếm đất,Không đồng ý với cách xử lý lấn chiếm đất của cơ quan chức năng.,khieu_nai
+Báo cáo tình trạng thiếu nước,thiếu nước không được xử lý kịp thời gây ảnh hưởng cộng đồng.,phan_anh
+Khiếu nại về quyết định không hợp lý,Đề nghị xem xét lại quyết định liên quan đến quyết định không hợp lý.,khieu_nai

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin - Hệ thống Quản lý Xã{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+    <!-- Fallback Leaflet CSS (nếu CDN chính lỗi) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+    
+    <style>
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, #003f7f 0%, #0066cc 100%);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar.collapsed {
+            width: 70px;
+        }
+        
+        .admin-sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffd700;
+            transform: translateX(5px);
+        }
+        
+        .admin-sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        .admin-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        
+        .admin-content.expanded {
+            margin-left: 70px;
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #0066cc;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: #e9ecef;
+        }
+        
+        .admin-logo {
+            color: white;
+            font-weight: bold;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-text {
+            transition: opacity 0.3s ease;
+        }
+        
+        .admin-sidebar.collapsed .sidebar-text {
+            opacity: 0;
+            display: none;
+        }
+        
+        .admin-sidebar.collapsed .admin-logo .sidebar-text {
+            display: none;
+        }
+        
+        .admin-sidebar.collapsed .nav-link {
+            text-align: center;
+            padding: 12px;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+            transition: transform 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stat-card.primary { border-left-color: #0066cc; }
+        .stat-card.success { border-left-color: #28a745; }
+        .stat-card.warning { border-left-color: #ffc107; }
+        .stat-card.info { border-left-color: #17a2b8; }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 250px;
+            }
+            
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .admin-content {
+                margin-left: 0;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .admin-header .d-flex:first-child {
+                order: 1;
+            }
+            
+            .admin-header .d-flex:last-child {
+                order: 2;
+                justify-content: space-between;
+            }
+            
+            .search-container {
+                order: 3;
+                max-width: 100%;
+                margin: 0;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card h6 {
+                font-size: 0.875rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .btn-group .btn {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Admin Sidebar -->
+    <nav class="admin-sidebar" id="adminSidebar">
+        <div class="admin-logo">
+            <i class="fas fa-landmark me-2"></i>
+            <span class="sidebar-text">UBND Xã Xuân Giang</span>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' else '' }}" 
+                   href="{{ url_for('admin.dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="sidebar-text">Bảng điều khiển</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'population' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.population') }}">
+                    <i class="fas fa-users"></i>
+                    <span class="sidebar-text">Quản lý Dân cư</span>
+                </a>
+            </li>
+            
+            {% if current_user.role == 'admin' %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'household' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.add_household') }}">
+                    <i class="fas fa-home"></i>
+                    <span class="sidebar-text">Thêm Hộ gia đình</span>
+                </a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'feedback' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.feedback_management') }}">
+                    <i class="fas fa-comments"></i>
+                    <span class="sidebar-text">Quản lý Phản ánh</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin.temporary_overview' else '' }}" 
+                   href="{{ url_for('admin.temporary_overview') }}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="sidebar-text">Tạm trú/Tạm vắng</span>
+                </a>
+            </li>
+
+            
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'documents' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.document_requests_admin') }}">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="sidebar-text">Yêu cầu giấy tờ</span>
+                </a>
+            </li>
+
+            {% if current_user.role == 'admin' %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin.document_types' else '' }}" 
+                   href="{{ url_for('admin.document_types') }}">
+                    <i class="fas fa-folder-tree"></i>
+                    <span class="sidebar-text">Loại giấy tờ</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'benefits' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.benefits') }}">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span class="sidebar-text">Đối tượng chính sách</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'bulletin' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.bulletin_management') }}">
+                    <i class="fas fa-bullhorn"></i>
+                    <span class="sidebar-text">Quản lý Bảng tin</span>
+                </a>
+            </li>
+            
+            {% if current_user.role == 'admin' %}
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if 'announcement' in request.endpoint else '' }}" 
+                   href="{{ url_for('admin.add_announcement') }}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="sidebar-text">Thêm Thông báo</span>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% if current_user.role == 'admin' %}
+            <li class="nav-item mt-3">
+                <div class="nav-link text-white-50">
+                    <i class="fas fa-download"></i>
+                    <span class="sidebar-text">Xuất dữ liệu</span>
+                </div>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.export_residents', format='csv') }}">
+                    <i class="fas fa-file-csv"></i>
+                    <span class="sidebar-text">Xuất CSV</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.export_residents', format='xml') }}">
+                    <i class="fas fa-file-code"></i>
+                    <span class="sidebar-text">Xuất XML</span>
+                </a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item mt-4">
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin.admin_users' else '' }}" href="{{ url_for('admin.admin_users') }}">
+                    <i class="fas fa-users-cog"></i>
+                    <span class="sidebar-text">Quản lý Admin</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'admin.admin_citizens' else '' }}" href="{{ url_for('admin.admin_citizens') }}">
+                    <i class="fas fa-user-friends"></i>
+                    <span class="sidebar-text">Quản lý User</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                    <i class="fas fa-home"></i>
+                    <span class="sidebar-text">Về trang chủ</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sidebar-text">Đăng xuất</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="admin-content" id="adminContent">
+        <!-- Header -->
+        <div class="admin-header">
+            <div class="d-flex align-items-center flex-grow-1">
+                <button class="sidebar-toggle me-3" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="h4 mb-0 me-4">{% block page_title %}Hệ thống Quản lý{% endblock %}</h1>
+                
+                <!-- Quick Search -->
+                <div class="search-container me-auto">
+                    <div class="input-group">
+                        <input type="text" id="quickSearch" class="form-control" placeholder="Tìm kiếm nhanh..." autocomplete="off">
+                        <button class="btn btn-outline-secondary" type="button" onclick="performQuickSearch()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center">
+                <!-- Quick Actions -->
+                <div class="dropdown me-3">
+                    
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('admin.add_household') }}">
+                            <i class="fas fa-home me-2"></i>Hộ gia đình
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin.add_announcement') }}">
+                            <i class="fas fa-bullhorn me-2"></i>Thông báo
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <span class="me-3">Xin chào, {{ current_user.full_name }}</span>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-2"></i>Trang chủ
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="p-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Page Content -->
+        <div class="p-4">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Global Map Modal available across admin pages -->
+    <div class="modal fade" id="mapModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="mapModalTitle">Xem vị trí</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="modalMapCanvas" style="height: 360px; border: 1px solid #ddd; border-radius: 8px;"></div>
+            <div class="form-text mt-2">Dùng chuột để phóng to/thu nhỏ bản đồ.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const content = document.getElementById('adminContent');
+            
+            sidebar.classList.toggle('collapsed');
+            content.classList.toggle('expanded');
+            
+            // Save state to localStorage
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        }
+        
+        // Restore sidebar state
+        document.addEventListener('DOMContentLoaded', function() {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.getElementById('adminSidebar').classList.add('collapsed');
+                document.getElementById('adminContent').classList.add('expanded');
+            }
+            
+            // Mobile menu toggle
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('adminSidebar');
+                sidebar.classList.add('collapsed');
+            }
+        });
+        
+        // Mobile sidebar toggle
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            sidebar.classList.toggle('show');
+        }
+        
+        // Quick search functionality
+        let searchTimeout;
+        const searchInput = document.getElementById('quickSearch');
+        const searchResults = document.getElementById('searchResults');
+        
+        function performQuickSearch() {
+            const query = searchInput.value.trim();
+            if (query.length < 2) {
+                hideSearchResults();
+                return;
+            }
+            
+            // Mock search data - in real implementation, this would be an API call
+            const mockResults = [
+                { title: 'Hộ gia đình: ' + query, subtitle: 'Tìm thấy hộ gia đình phù hợp', url: '/admin/population' },
+                { title: 'Nhân khẩu: ' + query, subtitle: 'Tìm thấy nhân khẩu phù hợp', url: '/admin/population' },
+                { title: 'Phản ánh: ' + query, subtitle: 'Tìm thấy phản ánh phù hợp', url: '/admin/feedback-management' },
+                { title: 'Thông báo: ' + query, subtitle: 'Tìm thấy thông báo phù hợp', url: '/admin/bulletin-management' }
+            ];
+            
+            displaySearchResults(mockResults);
+        }
+        
+        function displaySearchResults(results) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-result-item"><div class="result-title">Không tìm thấy kết quả</div></div>';
+            } else {
+                searchResults.innerHTML = results.map(result => `
+                    <div class="search-result-item" onclick="window.location.href='${result.url}'">
+                        <div class="result-title">${result.title}</div>
+                        <div class="result-subtitle">${result.subtitle}</div>
+                    </div>
+                `).join('');
+            }
+            searchResults.style.display = 'block';
+        }
+        
+        function hideSearchResults() {
+            searchResults.style.display = 'none';
+        }
+        
+        // Search input event listeners
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(performQuickSearch, 300);
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    performQuickSearch();
+                }
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                // Delay hiding to allow clicking on results
+                setTimeout(hideSearchResults, 200);
+            });
+            
+            // Handle Enter key
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performQuickSearch();
+                }
+            });
+        }
+        
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                hideSearchResults();
+            }
+        });
+    </script>
+
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+    <!-- Fallback Leaflet JS (không SRI, nếu CDN chính lỗi) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+      // Wire up a global map modal handler once for all admin pages
+      (function(){
+        if (window.__globalMapModalWired) return; // prevent duplicate bindings
+        window.__globalMapModalWired = true;
+        var mapInstance, markerInstance;
+        var pendingLat, pendingLng, pendingTitle;
+        function initMapModal(lat, lng){
+          if (!window.L) { console.warn('Leaflet chưa tải.'); return; }
+          var container = document.getElementById('modalMapCanvas');
+          if (!container) return;
+          container.innerHTML = '';
+          mapInstance = L.map('modalMapCanvas').setView([lat, lng], 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(mapInstance);
+          markerInstance = L.marker([lat, lng]).addTo(mapInstance);
+          setTimeout(function(){ try { mapInstance.invalidateSize(); } catch(e){} }, 200);
+        }
+        var modalEl = document.getElementById('mapModal');
+        if (!modalEl) return;
+        modalEl.addEventListener('show.bs.modal', function(ev){
+          var btn = ev.relatedTarget;
+          if (!btn) return; // programmatic open may set data before
+          pendingTitle = btn.getAttribute('data-map-title') || 'Xem vị trí';
+          pendingLat = parseFloat(btn.getAttribute('data-lat'));
+          pendingLng = parseFloat(btn.getAttribute('data-lng'));
+          var titleEl = document.getElementById('mapModalTitle');
+          if (titleEl) titleEl.textContent = pendingTitle;
+        });
+        modalEl.addEventListener('shown.bs.modal', function(){
+          if (!isNaN(pendingLat) && !isNaN(pendingLng)){
+            initMapModal(pendingLat, pendingLng);
+          }
+        });
+        modalEl.addEventListener('hidden.bs.modal', function(){
+          try { if (mapInstance && mapInstance.remove) mapInstance.remove(); } catch(e){}
+          mapInstance = null; markerInstance = null;
+          pendingLat = undefined; pendingLng = undefined; pendingTitle = undefined;
+          var container = document.getElementById('modalMapCanvas');
+          if (container) container.innerHTML = '';
+        });
+      })();
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

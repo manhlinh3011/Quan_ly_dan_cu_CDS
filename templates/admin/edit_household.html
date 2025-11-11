@@ -1,0 +1,280 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Chỉnh sửa hộ gia đình - Admin{% endblock %}
+
+{% block page_title %}Chỉnh sửa hộ gia đình{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-edit me-2"></i>Chỉnh sửa hộ gia đình</h2>
+                <a href="{{ url_for('admin.population') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Quay lại
+                </a>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Thông tin hộ gia đình: {{ household.household_code }}</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.household_code.label(class="form-label required") }}
+                                    {{ form.household_code(class="form-control" + (" is-invalid" if form.household_code.errors else "")) }}
+                                    {% if form.household_code.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.household_code.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Mã số duy nhất của hộ gia đình</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.hamlet.label(class="form-label required") }}
+                                    {{ form.hamlet(class="form-select" + (" is-invalid" if form.hamlet.errors else "")) }}
+                                    {% if form.hamlet.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.hamlet.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.head_of_household.label(class="form-label required") }}
+                            {{ form.head_of_household(class="form-control" + (" is-invalid" if form.head_of_household.errors else ""), pattern="^[A-Za-zÀ-ỹ\s]+$", title="Chỉ nhập chữ cái và khoảng trắng") }}
+                            {% if form.head_of_household.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.head_of_household.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Chỉ nhập chữ cái và khoảng trắng (không nhập số/ký tự đặc biệt)</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.head_id_number.label(class="form-label") }}
+                                    {{ form.head_id_number(class="form-control" + (" is-invalid" if form.head_id_number.errors else "")) }}
+                                    {% if form.head_id_number.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.head_id_number.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.head_birth_date.label(class="form-label") }}
+                                    {{ form.head_birth_date(class="form-control" + (" is-invalid" if form.head_birth_date.errors else "")) }}
+                                    {% if form.head_birth_date.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.head_birth_date.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.head_occupation.label(class="form-label") }}
+                                    {{ form.head_occupation(class="form-control" + (" is-invalid" if form.head_occupation.errors else "")) }}
+                                    {% if form.head_occupation.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.head_occupation.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.head_gender.label(class="form-label") }}
+                                    {{ form.head_gender(class="form-select" + (" is-invalid" if form.head_gender.errors else "")) }}
+                                    {% if form.head_gender.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.head_gender.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.address.label(class="form-label required") }}
+                            {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else "")) }}
+                            {% if form.address.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Địa chỉ chi tiết (số nhà, tên đường...)</div>
+                        </div>
+
+                        <!-- Bản đồ và tìm địa chỉ cho Hộ gia đình -->
+                        <div class="mb-4">
+                            <label class="form-label">Vị trí trên bản đồ (Hộ gia đình)</label>
+                            <input id="addressSearchHHEdit" class="form-control mb-2" type="text" placeholder="Tìm địa chỉ (ví dụ: xã, thôn, đường...)" autocomplete="off" />
+                            <div id="addressSuggestionsHHEdit"></div>
+                            <div id="householdMapEdit" style="height: 300px; border: 1px solid #ddd; border-radius: 8px;"></div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Vĩ độ (lat)</label>
+                                    <input name="current_lat" class="form-control" value="{{ household.location_lat if household.location_lat is not none else '' }}" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Kinh độ (lng)</label>
+                                    <input name="current_lng" class="form-control" value="{{ household.location_lng if household.location_lng is not none else '' }}" />
+                                </div>
+                            </div>
+                            <div class="form-text">Nhấp vào bản đồ để chọn vị trí. Chọn gợi ý để đặt vị trí chính xác.</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                            {% if form.phone.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.population') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Hủy
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-1"></i>Cập nhật
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Quick Link to Residents -->
+            <div class="card mt-4">
+                <div class="card-body text-center">
+                    <h6>Quản lý nhân khẩu</h6>
+                    <p class="text-muted">Xem và quản lý các thành viên trong hộ gia đình này</p>
+                    <a href="{{ url_for('admin.household_residents', id=household.id) }}" class="btn btn-info">
+                        <i class="fas fa-users me-1"></i>Xem nhân khẩu ({{ household.residents | length }} người)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.required::after {
+    content: " *";
+    color: red;
+}
+/* Gợi ý tìm địa chỉ */
+#addressSuggestionsHHEdit { position: relative; z-index: 500; }
+#addressSuggestionsHHEdit .suggest-item { background: #fff; border: 1px solid #ddd; padding: 8px; cursor: pointer; }
+#addressSuggestionsHHEdit .suggest-item:hover { background: #f7f7f7; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){
+        if (!window.L) { console.warn('Leaflet chưa tải.'); return; }
+        var latEl = document.querySelector('[name="current_lat"]');
+        var lngEl = document.querySelector('[name="current_lng"]');
+        var lat = latEl && latEl.value ? parseFloat(latEl.value) : 21.0;
+        var lng = lngEl && lngEl.value ? parseFloat(lngEl.value) : 105.0;
+        var map = L.map('householdMapEdit').setView([lat, lng], (latEl && lngEl && latEl.value && lngEl.value) ? 14 : 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        var marker;
+        if(latEl && lngEl && latEl.value && lngEl.value){ marker = L.marker([lat, lng]).addTo(map); }
+        function updateFields(latlng){
+            if(latEl) latEl.value = latlng.lat.toFixed(6);
+            if(lngEl) lngEl.value = latlng.lng.toFixed(6);
+        }
+        map.on('click', function(e){
+            if(marker){ map.removeLayer(marker); }
+            marker = L.marker(e.latlng).addTo(map);
+            updateFields(e.latlng);
+        });
+
+        // Tìm địa chỉ với gợi ý (Nominatim)
+        var searchInput = document.getElementById('addressSearchHHEdit');
+        var suggestBox = document.getElementById('addressSuggestionsHHEdit');
+        var debounceTimer;
+        function clearSuggestions(){ if(!suggestBox) return; suggestBox.innerHTML=''; suggestBox.style.display='none'; }
+        function renderSuggestions(results){
+            if(!suggestBox) return;
+            suggestBox.innerHTML = results.map(function(r){
+                var label = r.display_name || (r.address && r.address.road) || 'Kết quả';
+                return '<div class="suggest-item" data-lat="'+r.lat+'" data-lon="'+r.lon+'">'+label+'</div>';
+            }).join('');
+            suggestBox.style.display = 'block';
+            Array.from(suggestBox.querySelectorAll('.suggest-item')).forEach(function(el){
+                el.addEventListener('click', function(){
+                    var slat = parseFloat(this.dataset.lat);
+                    var slon = parseFloat(this.dataset.lon);
+                    var latlng = {lat: slat, lng: slon};
+                    if(marker){ map.removeLayer(marker); }
+                    marker = L.marker(latlng).addTo(map);
+                    updateFields(latlng);
+                    map.flyTo([slat, slon], 16);
+                    if(searchInput) searchInput.value = this.textContent;
+                    clearSuggestions();
+                });
+            });
+        }
+        function searchAddress(q){
+            var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=VN&limit=5&q=' + encodeURIComponent(q);
+            fetch(url, { headers: { 'Accept-Language': 'vi' } })
+                .then(function(res){ return res.json(); })
+                .then(function(data){ if(Array.isArray(data) && data.length){ renderSuggestions(data); } else { clearSuggestions(); } })
+                .catch(function(){ clearSuggestions(); });
+        }
+        if(searchInput){
+            searchInput.addEventListener('input', function(){
+                var q = this.value || '';
+                if(debounceTimer) clearTimeout(debounceTimer);
+                if(q.length < 3){ clearSuggestions(); return; }
+                debounceTimer = setTimeout(function(){ searchAddress(q); }, 350);
+            });
+            document.addEventListener('click', function(e){ if(!suggestBox.contains(e.target) && e.target !== searchInput){ clearSuggestions(); } });
+        }
+    })();
+</script>
+{% endblock %}

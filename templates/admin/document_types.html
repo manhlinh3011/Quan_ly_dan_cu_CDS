@@ -1,0 +1,74 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Quản lý loại giấy tờ{% endblock %}
+{% block page_title %}Quản lý loại giấy tờ{% endblock %}
+
+{% block content %}
+<div class="mb-3 d-flex align-items-center justify-content-between">
+  <div class="btn-group" role="group" aria-label="Chuyển tab">
+    <button type="button" class="btn btn-primary btn-tab" data-tab="add"><i class="fas fa-plus me-1"></i>Thêm loại giấy tờ</button>
+    <button type="button" class="btn btn-outline-primary btn-tab" data-tab="list"><i class="fas fa-list me-1"></i>Danh sách loại giấy tờ</button>
+  </div>
+</div>
+
+<!-- Tab: Thêm loại giấy tờ -->
+<div id="tab-add" class="tab-pane-simple">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Thêm loại giấy tờ</h5>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">{{ form.code.label(class='form-label required') }} {{ form.code(class='form-control' + (' is-invalid' if form.code.errors else '')) }}
+          {% if form.code.errors %}<div class="invalid-feedback">{{ form.code.errors[0] }}</div>{% endif %}
+        </div>
+        <div class="mb-3">{{ form.name.label(class='form-label required') }} {{ form.name(class='form-control' + (' is-invalid' if form.name.errors else '')) }}
+          {% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors[0] }}</div>{% endif %}
+        </div>
+        <div class="mb-3">{{ form.description.label(class='form-label') }} {{ form.description(class='form-control', rows=3) }}</div>
+        <div class="mb-3">{{ form.required_fields.label(class='form-label') }} {{ form.required_fields(class='form-control', rows=3) }}
+          <!-- <div class="form-text">JSON mô tả các trường bổ sung, ví dụ: [{"key":"dia_chi","label":"Địa chỉ"}]</div> -->
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">{{ form.fee.label(class='form-label') }} {{ form.fee(class='form-control') }}</div>
+          <div class="col-md-6 mb-3">{{ form.processing_time_days.label(class='form-label') }} {{ form.processing_time_days(class='form-control') }}</div>
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-save me-1"></i>Lưu</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Tab: Danh sách loại giấy tờ -->
+<div id="tab-list" class="tab-pane-simple d-none">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Danh sách loại giấy tờ</h5>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover table-compact">
+          <thead><tr><th>#</th><th>Mã</th><th>Tên</th><th class="text-end">Lệ phí</th><th>Ngày xử lý</th><th class="text-end">Thao tác</th></tr></thead>
+          <tbody>
+            {% for t in items %}
+            <tr>
+              <td>{{ t.id }}</td>
+              <td>{{ t.code }}</td>
+              <td>{{ t.name }}</td>
+              <td class="text-end currency-text">{{ (t.fee or 0) | currency_vnd }}</td>
+              <td>{{ t.processing_time_days or '-' }}</td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_document_type', id=t.id) }}">Sửa</a>
+                <form method="post" action="{{ url_for('admin.delete_document_type', id=t.id) }}" class="d-inline" onsubmit="return confirm('Xoá loại giấy tờ này?')">
+                  <button class="btn btn-sm btn-outline-danger">Xoá</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted">Chưa có loại giấy tờ</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extra_js %}{% endblock %}
+{% endblock %}

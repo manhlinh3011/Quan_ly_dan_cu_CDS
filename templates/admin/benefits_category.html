@@ -1,0 +1,115 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Danh mục {{ category.name }} - Đối tượng{% endblock %}
+
+{% block page_title %}Danh mục: {{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <a href="{{ url_for('admin.benefits') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Quay lại danh sách</a>
+        </div>
+    </div>
+
+    <form method="GET" class="row g-3 mb-3">
+        <div class="col-md-2">
+            <label class="form-label">Đối tượng</label>
+            <select class="form-select" name="target_type">
+                <option value="">Tất cả</option>
+                <option value="household" {{ 'selected' if target_type=='household' else '' }}>Hộ gia đình</option>
+                <option value="resident" {{ 'selected' if target_type=='resident' else '' }}>Nhân khẩu</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Trạng thái</label>
+            <select class="form-select" name="status">
+                <option value="">Tất cả</option>
+                <option value="active" {{ 'selected' if status=='active' else '' }}>Đang hiệu lực</option>
+                <option value="inactive" {{ 'selected' if status=='inactive' else '' }}>Ngừng</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Thôn/Xóm</label>
+            <select class="form-select" name="hamlet">
+                <option value="">Tất cả</option>
+                {% for h in hamlets %}
+                    <option value="{{ h }}" {{ 'selected' if hamlet==h else '' }}>{{ h }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Tìm nhanh</label>
+            <input type="text" class="form-control" name="q" value="{{ q or '' }}" placeholder="Tên/Mã hộ">
+        </div>
+        <div class="col-auto d-flex align-items-end">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-filter me-1"></i>Lọc</button>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-header bg-light"><strong>Đối tượng thuộc: {{ category.name }}</strong></div>
+        <div class="card-body">
+            {% if items %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-compact">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Đối tượng</th>
+                                <th>Mã hộ</th>
+                                <th>Họ tên</th>
+                                <th>Thôn/Xóm</th>
+                                <th class="text-end col-amount">Mức hỗ trợ</th>
+                                <th>Thời gian</th>
+                                <th>Đang hiệu lực</th>
+                                <th>Đã chi trả</th>
+                                <th class="action-col nowrap">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for b, h, r in items %}
+                                <tr>
+                                    <td>{{ 'Hộ' if b.target_type=='household' else 'Nhân khẩu' }}</td>
+                                    <td>{{ h.household_code if h else (r.household.household_code if r and r.household else '-') }}</td>
+                                    <td>{{ r.full_name if r else (h.head_of_household if h else '-') }}</td>
+                                    <td>{{ h.hamlet if h else (r.household.hamlet if r and r.household else '-') }}</td>
+                                    <td class="text-end currency-text">{{ (b.support_amount or category.support_amount) | currency_vnd }}</td>
+                                    <td>{{ b.start_date.strftime('%d/%m/%Y') }} - {{ b.end_date.strftime('%d/%m/%Y') if b.end_date else '-' }}</td>
+                                    <td><span class="badge bg-{{ 'success' if b.is_active else 'secondary' }}">{{ 'Có' if b.is_active else 'Không' }}</span></td>
+                                    <td>
+                                        {% if current_user.role == 'admin' %}
+                                        <form method="POST" action="{{ url_for('admin.toggle_beneficiary_paid', id=b.id) }}" class="d-inline">
+                                            <button class="btn btn-sm {{ 'btn-success' if b.is_paid else 'btn-outline-secondary' }}">
+                                                <i class="fas {{ 'fa-check-circle' if b.is_paid else 'fa-circle' }} me-1"></i>{{ 'Đã chi' if b.is_paid else 'Chưa chi' }}
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        <span class="badge bg-{{ 'success' if b.is_paid else 'secondary' }}">{{ 'Đã chi' if b.is_paid else 'Chưa chi' }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-nowrap action-col">
+                                        <div class="d-inline-flex align-items-center gap-2 flex-wrap">
+                                            {% if current_user.role == 'admin' %}
+                                            <a class="btn btn-sm btn-outline-warning" href="{{ url_for('admin.edit_beneficiary', id=b.id) }}"><i class="fas fa-edit"></i></a>
+                                            <form method="POST" action="{{ url_for('admin.delete_beneficiary', id=b.id) }}" class="d-inline m-0" onsubmit="return confirm('Xóa đối tượng?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                            {% else %}
+                                            <span class="text-muted small">Chỉ xem</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">Chưa có đối tượng trong danh mục này.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

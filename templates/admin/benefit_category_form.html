@@ -1,0 +1,32 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Thêm danh mục chính sách{% endblock %}
+{% block page_title %}Thêm danh mục{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">{{ form.code.label(class="form-label required") }}{{ form.code(class="form-control" + (" is-invalid" if form.code.errors else "")) }}
+              {% if form.code.errors %}<div class="invalid-feedback">{{ form.code.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3">{{ form.name.label(class="form-label required") }}{{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+              {% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3">{{ form.target_type.label(class="form-label required") }}{{ form.target_type(class="form-select" + (" is-invalid" if form.target_type.errors else "")) }}
+              {% if form.target_type.errors %}<div class="invalid-feedback">{{ form.target_type.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="mb-3">{{ form.support_amount.label(class="form-label") }}{{ form.support_amount(class="form-control" + (" is-invalid" if form.support_amount.errors else ""), placeholder="VD: 500000") }}
+              {% if form.support_amount.errors %}<div class="invalid-feedback">{{ form.support_amount.errors[0] }}</div>{% endif %}
+            </div>
+            <div class="text-end"><button class="btn btn-success" type="submit"><i class="fas fa-save me-1"></i>Lưu</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,201 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Sửa tạm trú/tạm vắng - Admin{% endblock %}
+
+{% block page_title %}
+Sửa tạm trú/tạm vắng - 
+{{ resident.full_name if resident else ('Chủ hộ ' ~ (household.head_of_household if household else '')) }}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  #addressSearchWrapperTRE { position: relative; }
+  #addressSuggestionsTRE {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    z-index: 2000;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+  #addressSuggestionsTRE .suggest-item { padding: 8px 10px; cursor: pointer; font-size: 0.95rem; }
+  #addressSuggestionsTRE .suggest-item:hover { background: #f7f7f7; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-edit me-2"></i>Chỉnh sửa bản ghi</h2>
+                {% if resident %}
+                    <a href="{{ url_for('admin.manage_temporary_residence', resident_id=resident.id) }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Quay lại
+                    </a>
+                {% elif household %}
+                    <a href="{{ url_for('admin.manage_head_temporary', household_id=household.id) }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Quay lại
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.type.label(class="form-label required") }}
+                                    {{ form.type(class="form-select") }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.start_date.label(class="form-label required") }}
+                                    {{ form.start_date(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    {{ form.end_date.label(class="form-label") }}
+                                    {{ form.end_date(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.destination.label(class="form-label") }}
+                                    {{ form.destination(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.reason.label(class="form-label") }}
+                                    {{ form.reason(class="form-control") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.contact_info.label(class="form-label") }}
+                            {{ form.contact_info(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vị trí tạm trú/tạm vắng trên bản đồ</label>
+                            <div id="addressSearchWrapperTRE" class="mb-2">
+                                <input id="addressSearchTRE" class="form-control" type="text" placeholder="Tìm địa chỉ (ví dụ: xã, thôn, đường...)" autocomplete="off" />
+                                <div id="addressSuggestionsTRE"></div>
+                                <div class="form-text">Gõ ít nhất 3 ký tự để tìm. Chọn gợi ý để đặt vị trí.</div>
+                            </div>
+                            <div id="temporaryMapEdit" style="height: 300px; border: 1px solid #ddd; border-radius: 8px;"></div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    {{ form.lat.label(class="form-label") }}
+                                    {{ form.lat(class="form-control") }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.lng.label(class="form-label") }}
+                                    {{ form.lng(class="form-control") }}
+                                </div>
+                            </div>
+                            <div class="form-text">Nhấp vào bản đồ để chọn/cập nhật vị trí.</div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-warning"><i class="fas fa-save me-1"></i>Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){
+        var latEl = document.querySelector('[name="lat"]');
+        var lngEl = document.querySelector('[name="lng"]');
+        var lat = latEl && latEl.value ? parseFloat(latEl.value) : 21.0;
+        var lng = lngEl && lngEl.value ? parseFloat(lngEl.value) : 105.0;
+        var map = L.map('temporaryMapEdit').setView([lat, lng], (latEl && lngEl && latEl.value && lngEl.value) ? 14 : 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        var marker;
+        if(latEl && lngEl && latEl.value && lngEl.value){
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+        function updateFields(latlng){
+            if(latEl) latEl.value = latlng.lat.toFixed(6);
+            if(lngEl) lngEl.value = latlng.lng.toFixed(6);
+        }
+        map.on('click', function(e){
+            if(marker){ map.removeLayer(marker); }
+            marker = L.marker(e.latlng).addTo(map);
+            updateFields(e.latlng);
+        });
+
+        // Autocomplete tìm địa chỉ (Nominatim)
+        var searchInput = document.getElementById('addressSearchTRE');
+        var suggestBox = document.getElementById('addressSuggestionsTRE');
+        var debounceTimer;
+        function clearSuggestions(){
+            if(!suggestBox) return;
+            suggestBox.innerHTML = '';
+            suggestBox.style.display = 'none';
+        }
+        function renderSuggestions(results){
+            if(!suggestBox) return;
+            suggestBox.innerHTML = results.map(function(r){
+                var label = r.display_name || (r.address && r.address.road) || 'Kết quả';
+                return '<div class="suggest-item" data-lat="'+r.lat+'" data-lon="'+r.lon+'">'+label+'</div>';
+            }).join('');
+            suggestBox.style.display = 'block';
+            Array.from(suggestBox.querySelectorAll('.suggest-item')).forEach(function(el){
+                el.addEventListener('click', function(){
+                    var slat = parseFloat(this.dataset.lat);
+                    var slon = parseFloat(this.dataset.lon);
+                    var latlng = {lat: slat, lng: slon};
+                    if(marker){ map.removeLayer(marker); }
+                    marker = L.marker(latlng).addTo(map);
+                    updateFields(latlng);
+                    map.flyTo([slat, slon], 16);
+                    if(searchInput) searchInput.value = this.textContent;
+                    clearSuggestions();
+                });
+            });
+        }
+        function searchAddress(q){
+            var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=VN&limit=5&q=' + encodeURIComponent(q);
+            fetch(url, { headers: { 'Accept-Language': 'vi' } })
+                .then(function(res){ return res.json(); })
+                .then(function(data){
+                    if(Array.isArray(data) && data.length){
+                        renderSuggestions(data);
+                    } else { clearSuggestions(); }
+                })
+                .catch(function(err){ console.warn('Geocode error', err); clearSuggestions(); });
+        }
+        if(searchInput){
+            searchInput.addEventListener('input', function(){
+                var q = this.value.trim();
+                clearTimeout(debounceTimer);
+                if(q.length < 3){ clearSuggestions(); return; }
+                debounceTimer = setTimeout(function(){ searchAddress(q); }, 300);
+            });
+        }
+        document.addEventListener('click', function(e){
+            if(!e.target.closest('#addressSearchWrapperTRE')){ clearSuggestions(); }
+        });
+    })();
+</script>
+{% endblock %}
+
