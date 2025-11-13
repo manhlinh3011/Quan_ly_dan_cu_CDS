@@ -1,5 +1,3 @@
-
-=======
 <h2 align="center"> 
      <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin"> 
      🎓 Faculty of Information Technology (DaiNam University) 
@@ -71,7 +69,7 @@
  </p> 
  --- 
  <p align="center"> 
-   <img src="images/quanlyho" alt="Quản lý hộ gia đình" width="1000"/> 
+   <img src="images/quanlyho.jpg" alt="Quản lý hộ gia đình" width="1000"/> 
    <br/> 
    <em>Hình 3. 🖥️ Quản lý hộ gia đình</em><br/> 
  </p> 
@@ -80,10 +78,7 @@
    <img src="images/phanhoinguoidan.jpg" alt="Phản hồi người dân" width="1000"/> 
    <br/> 
    <em>Hình 4. 🖥️ Phản hồi người dân và phân loại mức độ</em><br/> 
- </p> 
- 
- (Lưu ý: Thêm các ảnh minh họa vào thư mục `images/` để hiển thị.)
- 
+ </p>  
  --- 
  
  ## 4. Các bước cài đặt 
